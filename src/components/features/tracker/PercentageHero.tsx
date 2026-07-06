@@ -1,5 +1,4 @@
 import {
-  formatMarketCap,
   formatMarketCapFull,
   formatPercentage,
 } from "@/lib/format-tracker";
@@ -42,21 +41,33 @@ export function PercentageHero({ data, loading, error }: Props) {
             <p className="font-mono text-[clamp(1.5rem,5vw,3.75rem)] font-bold text-green mb-2 leading-tight">
               {formatMarketCapFull(remainingMarketCap)}
             </p>
-            <p className="text-content-60 text-base mb-6">
-              still needs to migrate
+            <p className="text-content-60 text-xl mb-6">
+              needs to migrate
             </p>
-            <p className="font-mono text-[clamp(2rem,6vw,3.75rem)] font-medium text-flare mb-4 leading-tight">
+            <p className="font-mono text-[clamp(2rem,6vw,3.75rem)] font-medium text-flare mb-2 leading-tight">
               {formatPercentage(data.pqPercentage)}%
             </p>
-            <p className="text-content-60 text-lg">
-              <span className="text-white">{formatMarketCap(data.pqMarketCap)}</span>
-              {" "}of{" "}
-              <span className="text-white">{formatMarketCap(data.totalMarketCap)}</span>
-              {" "}total crypto
+            <p className="text-content-60 text-xl mb-6">
+              quantum secure
             </p>
-            <p className="text-content-40 mt-1">
-              market cap is quantum-secure
-            </p>
+            <div className="w-full">
+              <div className="relative h-3 bg-content-10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-flare rounded-full transition-all duration-500"
+                  style={{ width: `${Math.max(data.pqPercentage, 0.5)}%` }}
+                />
+                <div className="absolute top-0 left-1/4 w-px h-full bg-content-40" />
+                <div className="absolute top-0 left-1/2 w-px h-full bg-content-40" />
+                <div className="absolute top-0 left-3/4 w-px h-full bg-content-40" />
+              </div>
+              <div className="flex justify-between mt-2 text-sm text-content-40">
+                <span>0%</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+                <span>100%</span>
+              </div>
+            </div>
           </>
         ) : null}
         </div>
