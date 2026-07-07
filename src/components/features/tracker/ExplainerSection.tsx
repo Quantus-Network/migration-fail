@@ -63,19 +63,6 @@ export function ExplainerSection() {
           </li>
           <li>
             <a
-              href="https://www.theqrl.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
-            >
-              Quantum Resistant Ledger (QRL)
-            </a>
-            <span className="text-content-40 ml-2">
-              - Purpose-built PQC blockchain
-            </span>
-          </li>
-          <li>
-            <a
               href="https://www.quantus.com/"
               target="_blank"
               rel="noopener noreferrer"
@@ -98,6 +85,84 @@ export function ExplainerSection() {
             </a>
             <span className="text-content-40 ml-2">
               - Quantum computing challenge for ECDSA
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://quantum.country"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              Quantum Country
+            </a>
+            <span className="text-content-40 ml-2">
+              - Introduction to quantum computing
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://murmurationstwo.substack.com/p/if-the-quantum-canary-sings-its-too"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              If the Quantum Canary Sings, It's Too Late
+            </a>
+            <span className="text-content-40 ml-2">
+              - Murmurationstwo
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              Bitcoin and the Quantum Problem (Part 1)
+            </a>
+            <span className="text-content-40 ml-2">
+              - Murmurationstwo
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part-47f"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              Bitcoin and the Quantum Problem (Part 2)
+            </a>
+            <span className="text-content-40 ml-2">
+              - Murmurationstwo
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://murmurationstwo.substack.com/p/trillion-dollar-salvage"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              Trillion Dollar Salvage
+            </a>
+            <span className="text-content-40 ml-2">
+              - Murmurationstwo
+            </span>
+          </li>
+          <li>
+            <a
+              href="https://store.steampowered.com/app/2802710/Quantum_Odyssey/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flare hover:opacity-80 transition-opacity"
+            >
+              Quantum Odyssey
+            </a>
+            <span className="text-content-40 ml-2">
+              - Quantum computing puzzle game
             </span>
           </li>
         </ul>

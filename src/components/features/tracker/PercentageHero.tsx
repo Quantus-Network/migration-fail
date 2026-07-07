@@ -18,12 +18,9 @@ export function PercentageHero({ data, loading, error }: Props) {
 
   return (
     <section className="py-16 text-center px-4">
-      <h1 className="text-lg font-medium tracking-wider text-content-60 uppercase mb-2">
-        Post-Quantum Crypto
+      <h1 className="text-3xl md:text-4xl font-medium text-white mb-12">
+        Blockchain PQC Migration
       </h1>
-      <h2 className="text-2xl font-medium text-white mb-12">
-        Migration Tracker
-      </h2>
 
       <div className="flex justify-center">
         <div className="rounded-lg border border-border-med bg-surface px-6 py-10 md:px-16 md:py-12 text-center">
