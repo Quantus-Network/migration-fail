@@ -1,4 +1,5 @@
 import {
+  formatMarketCap,
   formatMarketCapFull,
   formatPercentage,
 } from "@/lib/format-tracker";
@@ -48,9 +49,13 @@ export function PercentageHero({ data, loading, error }: Props) {
               {formatPercentage(data.pqPercentage)}%
             </p>
             <p className="text-content-60 text-xl mb-6">
-              quantum secure
+              is quantum secure
             </p>
             <div className="w-full">
+              <div className="flex justify-between mb-2 text-sm text-content-60">
+                <span className="text-flare">{formatMarketCap(data.pqMarketCap)} secure</span>
+                <span>{formatMarketCap(data.totalMarketCap)} total</span>
+              </div>
               <div className="relative h-3 bg-content-10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-flare rounded-full transition-all duration-500"
