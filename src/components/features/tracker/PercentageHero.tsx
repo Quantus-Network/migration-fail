@@ -121,6 +121,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
     drawn && data ? `max(3px, ${data.pqPercentage}%)` : "0px";
   // Reduced motion renders the final value directly (no count-up settling).
   const shownValue = reduce ? target : display;
+  const [intPart, decPart] = shownValue.toFixed(4).split(".");
 
   return (
     <section className="pt-16 md:pt-24 pb-24 md:pb-32">
@@ -154,11 +155,11 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
               annotation. The .pixel-decay wrapper carries the
               cryptographic-decay texture; delete this <div> to remove it. */}
           <div className="pixel-decay w-fit mb-8">
-            <div className="flex items-start font-mono font-medium text-flare leading-none text-[clamp(4.5rem,16vw,11rem)]">
-              <span className="tracking-tighter tabular-nums">
-                {shownValue.toFixed(4)}
-              </span>
-              <span className="ml-[0.1em] text-[0.4em]">%</span>
+            <div className="flex items-baseline font-mono font-medium text-flare leading-none text-[clamp(4.5rem,16vw,11rem)]">
+              <span className="tracking-tighter tabular-nums">{intPart}</span>
+              <span className="mx-[-0.22em]">.</span>
+              <span className="tracking-tighter tabular-nums">{decPart}</span>
+              <span className="ml-[0.12em] text-[0.55em]">%</span>
             </div>
           </div>
 
