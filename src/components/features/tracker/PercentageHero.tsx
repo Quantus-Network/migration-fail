@@ -74,8 +74,18 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
 
     const isFirst = prevTargetRef.current === null;
 
-    // Ignore background refreshes that returned an unchanged value.
-    if (!isFirst && target === prevTargetRef.current) return;
+    // Ignore background refreshes that returned an unchanged value — but only
+    // once we've actually settled ON that value. If a prior animation's RAF was
+    // cancelled by an effect cleanup before it could run (e.g. React's dev
+    // double-invoke, or a remount that already has cached data on first render),
+    // prevTargetRef was advanced to target while display is still stranded at 0.
+    // In that case displayRef.current !== target, so we must re-animate.
+    if (
+      !isFirst &&
+      target === prevTargetRef.current &&
+      displayRef.current === target
+    )
+      return;
 
     if (reduce) {
       set(target);
@@ -121,7 +131,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
     drawn && data ? `max(3px, ${data.pqPercentage}%)` : "0px";
   // Reduced motion renders the final value directly (no count-up settling).
   const shownValue = reduce ? target : display;
-  const [intPart, decPart] = shownValue.toFixed(4).split(".");
+  const [intPart, decPart] = shownValue.toFixed(2).split(".");
 
   return (
     <section className="pt-16 md:pt-24 pb-24 md:pb-32">
@@ -139,7 +149,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
       ) : loading ? (
         <div className="animate-pulse">
           <div className="h-3 w-72 max-w-full bg-content-10 mb-8" />
-          <div className="h-[clamp(4.5rem,16vw,11rem)] w-[min(36rem,90%)] bg-content-10 mb-8" />
+          <div className="h-[clamp(5rem,20vw,14.5rem)] w-[min(36rem,90%)] bg-content-10 mb-8" />
           <div className="h-5 w-full max-w-xl bg-content-10 mb-8" />
           <div className="h-2 w-full bg-content-10 mb-8" />
           <div className="h-4 w-full max-w-md bg-content-10" />
@@ -148,32 +158,35 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
         <>
           {/* Kicker, doubling as the SEO h1 */}
           <h1 className="font-mono text-xs uppercase tracking-widest text-content-40 mb-8">
-            Crypto Market Cap Not Yet Quantum Secure
+            Share of Crypto Market Cap Not Yet Quantum Secure
           </h1>
 
           {/* The monument number: digits are the object, % is the unit
               annotation. The .pixel-decay wrapper carries the
               cryptographic-decay texture; delete this <div> to remove it. */}
           <div className="pixel-decay w-fit mb-8">
-            <div className="flex items-baseline font-mono font-medium text-flare leading-none text-[clamp(4.5rem,16vw,11rem)]">
-              <span className="tracking-tighter tabular-nums">{intPart}</span>
-              <span className="mx-[-0.22em]">.</span>
-              <span className="tracking-tighter tabular-nums">{decPart}</span>
+            <div className="flex items-baseline font-sans font-medium text-flare leading-none text-[clamp(5rem,20vw,14.5rem)] tabular-nums">
+              <span className="tracking-tighter">{intPart}</span>
+              <span>.</span>
+              <span className="tracking-tighter">{decPart}</span>
               <span className="ml-[0.12em] text-[0.55em]">%</span>
             </div>
           </div>
 
-          {/* (a) Single statement line */}
-          <p className="text-base leading-relaxed">
-            <span className="font-mono text-content">
+          {/* (a) Statement: the dollar figure as a true second headline,
+              with the migrated consolation stat beneath it */}
+          <p className="leading-tight">
+            <span className="font-sans tabular-nums text-content text-3xl md:text-4xl">
               {formatMarketCapFull(remainingMarketCap)}
-            </span>
-            <span className="text-content-60"> still vulnerable &middot; </span>
-            <span className="font-mono text-sage">
+            </span>{" "}
+            <span className="text-content-60 text-xl">still vulnerable</span>
+          </p>
+          <p className="mt-2 font-mono text-sm">
+            <span className="text-sage">
               {formatPercentage(data.pqPercentage)}% (
               {formatMarketCap(data.pqMarketCap)})
             </span>
-            <span className="text-content-60"> migrated</span>
+            <span className="text-content-40"> migrated</span>
           </p>
 
           {/* The gauge, between the statement line and the stamp */}
@@ -206,6 +219,10 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
                 }`}
                 style={{ width: fillWidth }}
               />
+            </div>
+            <div className="flex justify-between mt-2 font-mono text-xs text-content-40">
+              <span>0%</span>
+              <span>100%</span>
             </div>
           </div>
 
