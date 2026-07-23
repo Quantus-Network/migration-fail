@@ -4,6 +4,7 @@ export interface PQCoin {
   symbol: string;
   website: string;
   description: string;
+  signature: string; // Post-quantum signature scheme; "(unverified)" flags a guess
 }
 
 export const PQ_COINS: PQCoin[] = [
@@ -13,6 +14,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "ALGO",
     website: "https://www.algorand.com/",
     description: "State proofs with FALCON signatures",
+    signature: "Falcon (state proofs)",
   },
   {
     id: "iota",
@@ -20,6 +22,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "IOTA",
     website: "https://www.iota.org/",
     description: "Post-quantum signatures in development",
+    signature: "PQC (unverified)",
   },
   {
     id: "quantum-resistant-ledger",
@@ -27,6 +30,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "QRL",
     website: "https://www.theqrl.org/",
     description: "Purpose-built blockchain using XMSS hash-based signatures",
+    signature: "XMSS",
   },
   {
     id: "abelian",
@@ -34,6 +38,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "ABEL",
     website: "https://www.abelian.info/",
     description: "Lattice-based post-quantum privacy blockchain",
+    signature: "Lattice-based (unverified)",
   },
   {
     id: "qanplatform",
@@ -41,6 +46,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "QANX",
     website: "https://qanplatform.com/",
     description: "Quantum-resistant hybrid blockchain platform",
+    signature: "Lattice-based (unverified)",
   },
   {
     id: "cellframe",
@@ -48,6 +54,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "CELL",
     website: "https://cellframe.net/",
     description: "Post-quantum layer 1 network",
+    signature: "CRYSTALS-Dilithium (unverified)",
   },
   {
     id: "xxcoin",
@@ -55,6 +62,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "XX",
     website: "https://xx.network/",
     description: "Quantum-secure and privacy-focused blockchain",
+    signature: "PQC (unverified)",
   },
   {
     id: "quantus",
@@ -62,6 +70,7 @@ export const PQ_COINS: PQCoin[] = [
     symbol: "QUAN",
     website: "https://www.quantus.com/",
     description: "Post-quantum secure blockchain network",
+    signature: "PQC (unverified)",
   },
 ];
 

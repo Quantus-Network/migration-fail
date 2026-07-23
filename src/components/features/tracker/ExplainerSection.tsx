@@ -4,7 +4,7 @@ export function ExplainerSection() {
       href={`https://grokipedia.com/page/${slug}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-white underline decoration-content-40 underline-offset-2 hover:decoration-flare transition-colors"
+      className="text-content underline decoration-content-40 underline-offset-2 hover:decoration-flare transition-colors"
     >
       {term}
     </a>
@@ -12,7 +12,7 @@ export function ExplainerSection() {
 
   return (
     <section className="py-12 border-t border-border mt-8">
-      <h3 className="text-lg font-medium text-white mb-6 uppercase tracking-wider">
+      <h3 className="text-sm font-mono font-medium text-content mb-6 uppercase tracking-widest">
         What is Post-Quantum Cryptography?
       </h3>
 
@@ -44,7 +44,7 @@ export function ExplainerSection() {
       </div>
 
       <div className="mt-8">
-        <h4 className="text-sm font-medium text-content-60 uppercase tracking-wider mb-4">
+        <h4 className="text-sm font-mono font-medium text-content-60 uppercase tracking-widest mb-4">
           Learn More
         </h4>
         <ul className="space-y-2">
@@ -53,7 +53,7 @@ export function ExplainerSection() {
               href="https://csrc.nist.gov/projects/post-quantum-cryptography"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               NIST Post-Quantum Cryptography Project
             </a>
@@ -66,7 +66,7 @@ export function ExplainerSection() {
               href="https://www.quantus.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Quantus
             </a>
@@ -79,7 +79,7 @@ export function ExplainerSection() {
               href="https://ecdsa.fail"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               ECDSA.fail
             </a>
@@ -92,7 +92,7 @@ export function ExplainerSection() {
               href="https://quantum.country"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Quantum Country
             </a>
@@ -105,7 +105,7 @@ export function ExplainerSection() {
               href="https://murmurationstwo.substack.com/p/if-the-quantum-canary-sings-its-too"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               If the Quantum Canary Sings, It's Too Late
             </a>
@@ -118,7 +118,7 @@ export function ExplainerSection() {
               href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Bitcoin and the Quantum Problem (Part 1)
             </a>
@@ -131,7 +131,7 @@ export function ExplainerSection() {
               href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part-47f"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Bitcoin and the Quantum Problem (Part 2)
             </a>
@@ -144,7 +144,7 @@ export function ExplainerSection() {
               href="https://murmurationstwo.substack.com/p/trillion-dollar-salvage"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Trillion Dollar Salvage
             </a>
@@ -157,7 +157,7 @@ export function ExplainerSection() {
               href="https://store.steampowered.com/app/2802710/Quantum_Odyssey/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-flare hover:opacity-80 transition-opacity"
+              className="text-flare hover:text-flare transition-colors"
             >
               Quantum Odyssey
             </a>
@@ -169,7 +169,7 @@ export function ExplainerSection() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-border">
-        <h4 className="text-sm font-medium text-content-60 uppercase tracking-wider mb-4">
+        <h4 className="text-sm font-mono font-medium text-content-60 uppercase tracking-widest mb-4">
           Methodology
         </h4>
         <div className="space-y-3 text-content-40 text-sm">

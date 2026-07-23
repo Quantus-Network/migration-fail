@@ -20,9 +20,9 @@ export default {
         "flare-50": "rgba(255, 107, 53, 0.5)",
         "flare-20": "rgba(255, 107, 53, 0.2)",
         "flare-10": "rgba(255, 107, 53, 0.1)",
-        green: "#4ade80",
-        "green-20": "rgba(74, 222, 128, 0.2)",
-        "green-10": "rgba(74, 222, 128, 0.1)",
+        sage: "#6dbf8a",
+        "sage-20": "rgba(109, 191, 138, 0.2)",
+        "sage-10": "rgba(109, 191, 138, 0.1)",
       },
       fontFamily: {
         sans: ["Geist", "system-ui", "sans-serif"],

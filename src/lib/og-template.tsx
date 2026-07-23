@@ -1,111 +1,227 @@
-import { formatMarketCap, formatPercentage } from "@/lib/format-tracker";
+import {
+  formatMarketCap,
+  formatMarketCapFull,
+  formatPercentage,
+} from "@/lib/format-tracker";
 import { OG_HEIGHT, OG_WIDTH } from "@/lib/og-dimensions";
 
 interface OgTrackerStats {
   pqPercentage: number;
   pqMarketCap: number;
   totalMarketCap: number;
+  updatedAt?: Date | string;
 }
 
 const colors = {
   void: "#0e0e0e",
-  surface: "#181818",
-  white: "#ffffff",
-  green: "#4ade80",
+  flare: "#ff6b35",
+  content: "#e8e6e0",
+  sage: "#6dbf8a",
   content60: "rgba(232, 230, 224, 0.6)",
   content40: "rgba(232, 230, 224, 0.4)",
-  borderMed: "rgba(232, 230, 224, 0.16)",
+  content10: "rgba(232, 230, 224, 0.1)",
+  border: "rgba(232, 230, 224, 0.08)",
 } as const;
 
+const MONTHS = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+] as const;
+
+function formatObserved(value: Date | string | undefined): string {
+  const d = value instanceof Date ? value : value ? new Date(value) : new Date();
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const month = MONTHS[d.getUTCMonth()];
+  const year = d.getUTCFullYear();
+  const hh = String(d.getUTCHours()).padStart(2, "0");
+  const mm = String(d.getUTCMinutes()).padStart(2, "0");
+  return `${day} ${month} ${year} ${hh}:${mm} UTC`;
+}
+
 export function buildOgElement(stats: OgTrackerStats) {
-  const percentage = `${formatPercentage(stats.pqPercentage)}%`;
+  const remainingPct = 100 - stats.pqPercentage;
+  const [intPart, decPart] = remainingPct.toFixed(2).split(".");
+  const remainingMarketCap = stats.totalMarketCap - stats.pqMarketCap;
   const pqMarketCap = formatMarketCap(stats.pqMarketCap);
   const totalMarketCap = formatMarketCap(stats.totalMarketCap);
+  const fillPct = Math.max(stats.pqPercentage, 0.25);
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         justifyContent: "center",
         width: OG_WIDTH,
         height: OG_HEIGHT,
+        padding: "64px 72px",
         background: colors.void,
         fontFamily: "Geist",
+        color: colors.content,
       }}
     >
       <p
         style={{
-          margin: "0 0 8px",
-          fontSize: 22,
+          margin: "0 0 36px",
+          fontFamily: "Geist Mono",
+          fontSize: 18,
           fontWeight: 500,
-          letterSpacing: "0.08em",
+          letterSpacing: "0.12em",
           textTransform: "uppercase",
-          textAlign: "center",
-          color: colors.content60,
+          color: colors.content40,
         }}
       >
-        Post-Quantum Crypto
+        Share of Crypto Market Cap Not Yet Quantum Secure
       </p>
-      <h1
-        style={{
-          margin: "0 0 48px",
-          fontSize: 36,
-          fontWeight: 500,
-          textAlign: "center",
-          color: colors.white,
-        }}
-      >
-        Migration Tracker
-      </h1>
+
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "40px 64px",
-          border: `1px solid ${colors.borderMed}`,
-          borderRadius: 12,
-          background: colors.surface,
+          alignItems: "baseline",
+          margin: "0 0 28px",
+          color: colors.flare,
+          fontWeight: 500,
+          lineHeight: 1,
         }}
       >
-        <p
+        <span style={{ fontSize: 168, letterSpacing: "-0.04em" }}>
+          {intPart}
+        </span>
+        <span style={{ fontSize: 168, letterSpacing: "-0.04em" }}>.</span>
+        <span style={{ fontSize: 168, letterSpacing: "-0.04em" }}>
+          {decPart}
+        </span>
+        <span
           style={{
-            margin: "0 0 16px",
-            fontFamily: "Geist Mono",
-            fontSize: 72,
+            marginLeft: 16,
+            fontSize: 92,
             fontWeight: 500,
-            textAlign: "center",
-            color: colors.green,
-            lineHeight: 1,
           }}
         >
-          {percentage}
-        </p>
-        <p
+          %
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          margin: "0 0 8px",
+          lineHeight: 1.15,
+        }}
+      >
+        <span
           style={{
-            margin: 0,
-            fontSize: 24,
-            textAlign: "center",
+            fontSize: 36,
+            fontWeight: 500,
+            color: colors.content,
+          }}
+        >
+          {formatMarketCapFull(remainingMarketCap)}
+        </span>
+        <span
+          style={{
+            marginLeft: 12,
+            fontSize: 28,
             color: colors.content60,
           }}
         >
-          <span style={{ color: colors.white }}>{pqMarketCap}</span>
-          <span style={{ padding: "0 4px" }}>of</span>
-          <span style={{ color: colors.white }}>{totalMarketCap}</span>
-          <span style={{ padding: "0 4px" }}>total crypto</span>
-        </p>
-        <p
+          still vulnerable
+        </span>
+      </div>
+
+      <p
+        style={{
+          display: "flex",
+          margin: "0 0 36px",
+          fontFamily: "Geist Mono",
+          fontSize: 22,
+          fontWeight: 500,
+        }}
+      >
+        <span style={{ color: colors.sage }}>
+          {formatPercentage(stats.pqPercentage)}% ({pqMarketCap})
+        </span>
+        <span style={{ marginLeft: 8, color: colors.content40 }}>
+          migrated
+        </span>
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <div
           style={{
-            margin: "4px 0 0",
-            fontSize: 20,
-            textAlign: "center",
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 10,
+            fontFamily: "Geist Mono",
+            fontSize: 16,
+            fontWeight: 500,
+          }}
+        >
+          <span style={{ color: colors.sage }}>SECURED {pqMarketCap}</span>
+          <span style={{ color: colors.content40 }}>
+            TOTAL {totalMarketCap}
+          </span>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: 10,
+            background: colors.content10,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              width: `${fillPct}%`,
+              height: "100%",
+              background: colors.sage,
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 10,
+            fontFamily: "Geist Mono",
+            fontSize: 16,
+            fontWeight: 500,
             color: colors.content40,
           }}
         >
-          market cap is quantum-secure
-        </p>
+          <span>0%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          marginTop: 36,
+          paddingTop: 18,
+          borderTop: `1px solid ${colors.border}`,
+          fontFamily: "Geist Mono",
+          fontSize: 16,
+          fontWeight: 500,
+          letterSpacing: "0.08em",
+          color: colors.content40,
+        }}
+      >
+        {`LAST OBSERVED: ${formatObserved(stats.updatedAt)} · SOURCE: COINGECKO · STATUS: NOT MIGRATED`}
       </div>
     </div>
   );

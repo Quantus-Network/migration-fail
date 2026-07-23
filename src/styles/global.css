@@ -21,21 +21,57 @@
   h4,
   h5,
   h6 {
-    color: #ffffff;
+    color: #e8e6e0;
     font-weight: 500;
   }
 
   a {
     color: #ff6b35;
     text-decoration: none;
-    transition: opacity 0.15s ease;
-  }
-
-  a:hover {
-    opacity: 0.8;
+    transition: color 0.15s ease;
   }
 }
 
 .font-mono {
   font-family: "Geist Mono", ui-monospace, monospace;
+}
+
+/*
+ * Cryptographic-decay texture: a whisper-quiet pixel/dither mosaic sitting
+ * behind the hero monument number only. CSS-only (no JS, canvas, or images):
+ * a flare checkerboard at low opacity, radial-masked so it fades to nothing
+ * at the edges. To remove the effect, delete the wrapping
+ * <div className="pixel-decay"> in PercentageHero.tsx (this rule goes inert).
+ */
+.pixel-decay {
+  position: relative;
+  z-index: 0;
+}
+
+.pixel-decay::before {
+  content: "";
+  position: absolute;
+  inset: -10% -4%;
+  z-index: -1;
+  pointer-events: none;
+  background-image: conic-gradient(
+    from 90deg at 50% 50%,
+    rgba(255, 107, 53, 0.045) 25%,
+    transparent 0 50%,
+    rgba(255, 107, 53, 0.045) 0 75%,
+    transparent 0
+  );
+  background-size: 7px 7px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 68% 58% at 50% 50%,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(
+    ellipse 68% 58% at 50% 50%,
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 80%
+  );
 }
