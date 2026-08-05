@@ -4,6 +4,7 @@ import { fetchTrackerData, type TrackerData } from "@/types/coingecko";
 import { PercentageHero } from "./PercentageHero";
 import { CoinTable } from "./CoinTable";
 import { TopCoinsTable } from "./TopCoinsTable";
+import { ExposureChecker } from "./ExposureChecker";
 import { ExplainerSection } from "./ExplainerSection";
 
 const REFRESH_MS = 5 * 60_000; // 5 minutes, to stay under CoinGecko rate limits
@@ -78,6 +79,8 @@ export function PQTracker() {
       />
 
       <TopCoinsTable coins={data?.topCoins || []} loading={loading} />
+
+      <ExposureChecker />
 
       <ExplainerSection />
     </div>
