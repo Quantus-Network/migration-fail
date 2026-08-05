@@ -139,9 +139,13 @@ export function ExplainerSection() {
             chains with native post-quantum cryptography by the total cryptocurrency 
             market cap, using data from CoinGecko.
           </p>
-          <p>
-            <strong className="text-content-70">Important limitations:</strong>
-          </p>
+          {/* Sub-label of Methodology, so h5 under that h4 rather than a
+              bolded paragraph. font-normal and the explicit colour are needed
+              to beat global.css, which gives every h1-h6 weight 500 and full
+              content brightness. */}
+          <h5 className="font-normal uppercase text-sm text-content-40">
+            Important limitations
+          </h5>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>
               This metric uses total chain market cap and does not account for 
