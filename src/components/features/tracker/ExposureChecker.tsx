@@ -11,10 +11,18 @@ import {
 
 type Phase = "idle" | "loading" | "done" | "error";
 
+/**
+ * Five verdicts over our three palette tokens: sage reads safe, Gamboge warns,
+ * flare marks exposed value. The quantus.com labels are reused for family
+ * consistency, but their colours are off-palette stock Tailwind and are
+ * deliberately not imported.
+ */
 const RISK_TONE: Record<Risk, string> = {
+  "VERY LOW": "text-sage",
   LOW: "text-sage",
   MEDIUM: "text-gamboge",
   HIGH: "text-flare",
+  "VERY HIGH": "text-flare",
 };
 
 /** The stamp's label column, so every value starts on the same axis. */
@@ -36,10 +44,10 @@ function StampLine({
 function Skeleton() {
   return (
     <div className="mt-8">
+      {/* One bar per stamp line: address, public key, balance, risk. */}
       <div className="border-y border-border py-4 space-y-2.5 animate-pulse">
         <div className="h-3 w-64 max-w-full bg-content-10" />
         <div className="h-3 w-52 max-w-full bg-content-10" />
-        <div className="h-3 w-44 max-w-full bg-content-10" />
         <div className="h-3 w-56 max-w-full bg-content-10" />
         <div className="h-3 w-40 max-w-full bg-content-10" />
       </div>
@@ -147,17 +155,7 @@ export function ExposureChecker() {
 
               <StampLine label="Public key">
                 <span className={result.exposed ? "text-flare" : "text-sage"}>
-                  {result.exposed ? "EXPOSED" : "NOT EXPOSED"}
-                </span>
-              </StampLine>
-
-              <StampLine label="First exposure">
-                <span
-                  className={
-                    result.firstTxYear ? "text-content" : "text-content-40"
-                  }
-                >
-                  {result.firstTxYear ?? "n/a"}
+                  {result.exposed ? "EXPOSED" : "NOT YET EXPOSED"}
                 </span>
               </StampLine>
 

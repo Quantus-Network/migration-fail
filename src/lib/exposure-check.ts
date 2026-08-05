@@ -11,30 +11,40 @@ export interface ExposureResult {
   /** True once the account has sent a transaction: signing publishes the
    *  public key on chain, which is what a quantum attacker would need. */
   exposed: boolean;
-  /** Year of the first outgoing transaction, or null when never sent. */
-  firstTxYear: number | null;
+  /**
+   * Year of the first outgoing transaction. NOT surfaced in v1: the stamp
+   * drops the line, because no keyless endpoint provides it (eth_* gives a
+   * nonce, not a date). Optional so the Stage 2 RPC layer can omit it
+   * entirely; re-add the stamp line if an Etherscan key ever lands.
+   */
+  firstTxYear?: number | null;
   balanceEth: number;
 }
 
-export type Risk = "LOW" | "MEDIUM" | "HIGH";
+export type Risk = "VERY LOW" | "LOW" | "MEDIUM" | "HIGH" | "VERY HIGH";
 
 /**
- * Two-factor risk, mirroring the quantus.com checker: exposure decides whether
- * there is anything to attack, balance decides whether it is worth attacking.
- * An unexposed account is LOW at any balance, because the public key is still
- * hidden behind its hash.
+ * Two-factor risk: exposure decides whether there is anything to attack,
+ * balance decides whether it is worth attacking. An account that has never
+ * sent is VERY LOW at any balance, because its public key is still hidden
+ * behind a hash.
  *
- * NOTE: the balance cut-offs are our own and have not been checked against
- * quantus.com's published thresholds. Confirm before this ships.
+ * The label vocabulary matches the quantus.com checker so the two read as one
+ * family, but the scoring is ours and genuinely reads chain data. Their score
+ * is derived from the address string, so there is nothing numeric to match.
+ *
+ * PROVISIONAL: these cut-offs are our own and await team confirmation.
  */
-export const HIGH_BALANCE_ETH = 1;
 export const MEDIUM_BALANCE_ETH = 0.01;
+export const HIGH_BALANCE_ETH = 1;
+export const VERY_HIGH_BALANCE_ETH = 10;
 
 export function deriveRisk({ exposed, balanceEth }: ExposureResult): Risk {
-  if (!exposed) return "LOW";
-  if (balanceEth >= HIGH_BALANCE_ETH) return "HIGH";
-  if (balanceEth >= MEDIUM_BALANCE_ETH) return "MEDIUM";
-  return "LOW";
+  if (!exposed) return "VERY LOW";
+  if (balanceEth < MEDIUM_BALANCE_ETH) return "LOW";
+  if (balanceEth < HIGH_BALANCE_ETH) return "MEDIUM";
+  if (balanceEth <= VERY_HIGH_BALANCE_ETH) return "HIGH";
+  return "VERY HIGH";
 }
 
 const ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
@@ -59,13 +69,14 @@ export function formatEth(value: number): string {
 /**
  * STAGE 1 FIXTURES — review handles.
  *
- *   0x1111…1111  exposed, large balance   -> HIGH
- *   0x2222…2222  exposed, small balance   -> MEDIUM
- *   0x3333…3333  never sent               -> LOW, NOT EXPOSED, year n/a
- *   0x4444…4444  exposed, dust, no year   -> LOW with FIRST EXPOSURE n/a
- *   0x0000…0000  throws                   -> error state
- *   vitalik.eth  exposed, large balance   -> HIGH (ENS input path)
- *   error.eth    throws                   -> error state via ENS path
+ *   0x1111…1111  exposed, 42.3 ETH       -> VERY HIGH
+ *   0x2222…2222  exposed, 0.18 ETH       -> MEDIUM
+ *   0x3333…3333  never sent              -> VERY LOW, NOT YET EXPOSED, year n/a
+ *   0x4444…4444  exposed, dust, no year  -> LOW with FIRST EXPOSURE n/a
+ *   0x5555…5555  exposed, 3.2 ETH        -> HIGH
+ *   0x0000…0000  throws                  -> error state
+ *   vitalik.eth  exposed, 1203 ETH       -> VERY HIGH (ENS input path)
+ *   error.eth    throws                  -> error state via ENS path
  *
  * Anything else valid falls through to a deterministic pseudo-result so the
  * section can be exercised with arbitrary addresses.
@@ -90,6 +101,11 @@ const FIXTURES: Record<string, ExposureResult | "error"> = {
     exposed: true,
     firstTxYear: null,
     balanceEth: 0.0004,
+  },
+  "0x5555555555555555555555555555555555555555": {
+    exposed: true,
+    firstTxYear: 2019,
+    balanceEth: 3.2,
   },
   "0x0000000000000000000000000000000000000000": "error",
   "vitalik.eth": { exposed: true, firstTxYear: 2015, balanceEth: 1203.9982 },
