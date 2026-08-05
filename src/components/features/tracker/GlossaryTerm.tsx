@@ -122,8 +122,16 @@ export function GlossaryTerm({ term, href, children }: Props) {
    * links, so the two are told apart at rest rather than only on hover. Text
    * colour stays text-content; only the rule brightens to flare on hover.
    */
+  // text-inherit, not a fixed colour: the term takes whatever the paragraph is
+  // set to (content-70 in body prose, content-40 in Methodology) so it is never
+  // brighter than the text around it. The dotted rule is the entire affordance
+  // — that is what separates this register from a navigation link.
+  //
+  // `text-inherit` is load-bearing and must not be dropped: global.css sets a
+  // base `a { color: #ff6b35 }`, so a linked term with no colour class falls
+  // back to flare and silently reads as navigation.
   const termClass =
-    "text-content border-b border-dotted border-content-40 hover:border-flare transition-colors";
+    "text-inherit border-b border-dotted border-content-40 hover:border-flare transition-colors";
 
   const handlers = interactive
     ? { onMouseEnter: show, onMouseLeave: hide, onFocus: show, onBlur: hide }
