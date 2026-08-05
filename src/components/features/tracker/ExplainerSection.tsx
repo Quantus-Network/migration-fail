@@ -143,7 +143,7 @@ export function ExplainerSection() {
               bolded paragraph. font-normal and the explicit colour are needed
               to beat global.css, which gives every h1-h6 weight 500 and full
               content brightness. */}
-          <h5 className="font-normal uppercase text-sm text-content-40">
+          <h5 className="font-normal uppercase text-sm text-content-60">
             Important limitations
           </h5>
           <ul className="list-disc list-inside space-y-1 ml-2">
