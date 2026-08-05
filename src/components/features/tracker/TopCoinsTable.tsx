@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { Fragment, useId, useState } from "react";
 import type { CoinWithPercentage } from "@/types/coingecko";
 import { formatMarketCapFull } from "@/lib/format-tracker";
-import { getTopCoinSignature } from "@/constants/top-coins-signatures";
-import { AnnotationCard, usePointerFine } from "./HoverAnnotation";
+import {
+  getTopCoinExplainer,
+  getTopCoinSignature,
+} from "@/constants/top-coins-signatures";
+import {
+  AnnotationCard,
+  CARD_TEXT_WRAP,
+  ExpandingRow,
+  useHoverNone,
+  usePointerFine,
+} from "./HoverAnnotation";
 
 interface Props {
   coins: CoinWithPercentage[];
@@ -54,6 +63,11 @@ function SkeletonRow() {
 
 export function TopCoinsTable({ coins, loading }: Props) {
   const fine = usePointerFine();
+  // Touch fallback for the hover cards: rows expand on tap instead. Requires
+  // no hover *and* no mouse, so hybrids keep the desktop behaviour.
+  const expandable = useHoverNone() && !fine;
+  const uid = useId();
+  const [openId, setOpenId] = useState<string | null>(null);
   const [hover, setHover] = useState<{
     x: number;
     y: number;
@@ -91,10 +105,26 @@ export function TopCoinsTable({ coins, loading }: Props) {
                 </td>
               </tr>
             ) : (
-              coins.map((coin, index) => (
+              coins.map((coin, index) => {
+                const open = expandable && openId === coin.id;
+                const stripId = `${uid}-${coin.id}`;
+                return (
+                <Fragment key={coin.id}>
                 <tr
-                  key={coin.id}
-                  className="border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
+                  className={
+                    expandable
+                      ? `cursor-pointer transition-colors ${
+                          open ? "bg-content-4" : ""
+                        }`
+                      : "border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
+                  }
+                  aria-expanded={expandable ? open : undefined}
+                  aria-controls={expandable ? stripId : undefined}
+                  onClick={
+                    expandable
+                      ? () => setOpenId((prev) => (prev === coin.id ? null : coin.id))
+                      : undefined
+                  }
                   onMouseEnter={
                     fine
                       ? (e) => setHover({ x: e.clientX, y: e.clientY, coin })
@@ -133,14 +163,41 @@ export function TopCoinsTable({ coins, loading }: Props) {
                     {formatPercentage(coin.percentageOfTotal)}%
                   </td>
                 </tr>
-              ))
+                {expandable && (
+                  <ExpandingRow
+                    id={stripId}
+                    open={open}
+                    colSpan={3}
+                    divider={index !== coins.length - 1}
+                  >
+                    <div className="text-content">
+                      {coin.market_cap === null
+                        ? "N/A"
+                        : formatMarketCapFull(coin.market_cap)}
+                    </div>
+                    <div className="text-content-60">
+                      {coin.percentageOfTotal.toFixed(4)}% of total
+                    </div>
+                    <div className="text-flare">
+                      SIGNATURE: {getTopCoinSignature(coin.id)}
+                    </div>
+                    {getTopCoinExplainer(coin.id) && (
+                      <div className="text-xs text-content-40 normal-case">
+                        {getTopCoinExplainer(coin.id)}
+                      </div>
+                    )}
+                  </ExpandingRow>
+                )}
+                </Fragment>
+                );
+              })
             )}
           </tbody>
         </table>
       </div>
       <p className="text-content-40 text-xs mt-3 flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 bg-flare" />
-        Uses ECDSA or similar quantum-vulnerable algorithms
+        Uses signatures a quantum computer could break
       </p>
 
       {fine && hover && (
@@ -156,6 +213,11 @@ export function TopCoinsTable({ coins, loading }: Props) {
           <div className="text-flare">
             SIGNATURE: {getTopCoinSignature(hover.coin.id)}
           </div>
+          {getTopCoinExplainer(hover.coin.id) && (
+            <div className={`text-xs text-content-40 normal-case ${CARD_TEXT_WRAP}`}>
+              {getTopCoinExplainer(hover.coin.id)}
+            </div>
+          )}
         </AnnotationCard>
       )}
     </section>

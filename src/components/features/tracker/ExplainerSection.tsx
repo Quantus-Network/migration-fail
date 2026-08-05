@@ -1,13 +1,67 @@
+import { GlossaryTerm } from "./GlossaryTerm";
+
+/** Register 2 — navigation links. Held as data so the arrow prefix and hover
+ *  underline are defined once rather than repeated per item. */
+const LEARN_MORE: { href: string; label: string; note: string }[] = [
+  {
+    href: "https://csrc.nist.gov/projects/post-quantum-cryptography",
+    label: "NIST Post-Quantum Cryptography Project",
+    note: "Standardization of PQC algorithms",
+  },
+  {
+    href: "https://www.quantus.com/",
+    label: "Quantus",
+    note: "Post-quantum secure network",
+  },
+  {
+    href: "https://ecdsa.fail",
+    label: "ECDSA.fail",
+    note: "Quantum computing challenge for ECDSA",
+  },
+  {
+    href: "https://quantum.country",
+    label: "Quantum Country",
+    note: "Introduction to quantum computing",
+  },
+  {
+    href: "https://murmurationstwo.substack.com/p/if-the-quantum-canary-sings-its-too",
+    label: "If the Quantum Canary Sings, It's Too Late",
+    note: "Murmurationstwo",
+  },
+  {
+    href: "https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part",
+    label: "Bitcoin and the Quantum Problem (Part 1)",
+    note: "Murmurationstwo",
+  },
+  {
+    href: "https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part-47f",
+    label: "Bitcoin and the Quantum Problem (Part 2)",
+    note: "Murmurationstwo",
+  },
+  {
+    href: "https://murmurationstwo.substack.com/p/trillion-dollar-salvage",
+    label: "Trillion Dollar Salvage",
+    note: "Murmurationstwo",
+  },
+  {
+    href: "https://store.steampowered.com/app/2802710/Quantum_Odyssey/",
+    label: "Quantum Odyssey",
+    note: "Quantum computing puzzle game",
+  },
+];
+
 export function ExplainerSection() {
-  const grokLink = (term: string, slug: string) => (
-    <a
-      href={`https://grokipedia.com/page/${slug}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-content underline decoration-content-40 underline-offset-2 hover:decoration-flare transition-colors"
-    >
+  /** Linked term: hover previews the glossary definition, click still opens the
+   *  external page. `key` looks up the definition; `term` is what's displayed. */
+  const grokLink = (term: string, slug: string, key = term) => (
+    <GlossaryTerm term={key} href={`https://grokipedia.com/page/${slug}`}>
       {term}
-    </a>
+    </GlossaryTerm>
+  );
+
+  /** Unlinked term: tooltip only, same underline for a consistent affordance. */
+  const glossaryOnly = (term: string, key = term) => (
+    <GlossaryTerm term={key}>{term}</GlossaryTerm>
   );
 
   return (
@@ -27,12 +81,17 @@ export function ExplainerSection() {
         </p>
 
         <p>
-          {grokLink("Post-quantum cryptography", "Post-quantum_cryptography")}{" "}
+          {grokLink(
+            "Post-quantum cryptography",
+            "Post-quantum_cryptography",
+            "post-quantum cryptography",
+          )}{" "}
           (PQC) refers to cryptographic algorithms that are believed to be
           secure against both classical and quantum computer attacks. These
           include {grokLink("lattice-based", "Lattice-based_cryptography")},{" "}
-          {grokLink("hash-based", "Hash-based_cryptography")}, code-based, and multivariate
-          polynomial cryptography.
+          {grokLink("hash-based", "Hash-based_cryptography")},{" "}
+          {glossaryOnly("code-based")}, and{" "}
+          {glossaryOnly("multivariate polynomial cryptography")}.
         </p>
 
         <p>
@@ -48,123 +107,25 @@ export function ExplainerSection() {
           Learn More
         </h4>
         <ul className="space-y-2">
-          <li>
-            <a
-              href="https://csrc.nist.gov/projects/post-quantum-cryptography"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              NIST Post-Quantum Cryptography Project
-            </a>
-            <span className="text-content-40 ml-2">
-              - Standardization of PQC algorithms
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://www.quantus.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Quantus
-            </a>
-            <span className="text-content-40 ml-2">
-              - Post-quantum secure network
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://ecdsa.fail"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              ECDSA.fail
-            </a>
-            <span className="text-content-40 ml-2">
-              - Quantum computing challenge for ECDSA
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://quantum.country"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Quantum Country
-            </a>
-            <span className="text-content-40 ml-2">
-              - Introduction to quantum computing
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://murmurationstwo.substack.com/p/if-the-quantum-canary-sings-its-too"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              If the Quantum Canary Sings, It's Too Late
-            </a>
-            <span className="text-content-40 ml-2">
-              - Murmurationstwo
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Bitcoin and the Quantum Problem (Part 1)
-            </a>
-            <span className="text-content-40 ml-2">
-              - Murmurationstwo
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://murmurationstwo.substack.com/p/bitcoin-and-the-quantum-problem-part-47f"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Bitcoin and the Quantum Problem (Part 2)
-            </a>
-            <span className="text-content-40 ml-2">
-              - Murmurationstwo
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://murmurationstwo.substack.com/p/trillion-dollar-salvage"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Trillion Dollar Salvage
-            </a>
-            <span className="text-content-40 ml-2">
-              - Murmurationstwo
-            </span>
-          </li>
-          <li>
-            <a
-              href="https://store.steampowered.com/app/2802710/Quantum_Odyssey/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-flare hover:text-flare transition-colors"
-            >
-              Quantum Odyssey
-            </a>
-            <span className="text-content-40 ml-2">
-              - Quantum computing puzzle game
-            </span>
-          </li>
+          {LEARN_MORE.map((item) => (
+            <li key={item.href}>
+              {/* Register 2 — navigation. The arrow is the rest affordance, so
+                  the underline is reserved for hover. Kept outside the anchor
+                  so it isn't underlined along with the label. */}
+              <span className="text-content-40" aria-hidden="true">
+                &rarr;{" "}
+              </span>
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-flare hover:underline decoration-1 underline-offset-2 transition-colors"
+              >
+                {item.label}
+              </a>
+              <span className="text-content-40 ml-2">- {item.note}</span>
+            </li>
+          ))}
         </ul>
       </div>
 

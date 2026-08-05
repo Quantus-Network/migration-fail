@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { Fragment, useId, useState } from "react";
 import type { CoinWithPercentage } from "@/types/coingecko";
 import type { PQCoin } from "@/constants/pq-coins";
 import { formatMarketCapFull } from "@/lib/format-tracker";
-import { AnnotationCard, usePointerFine } from "./HoverAnnotation";
+import {
+  AnnotationCard,
+  CARD_TEXT_WRAP,
+  ExpandingRow,
+  useHoverNone,
+  usePointerFine,
+} from "./HoverAnnotation";
 
 interface Props {
   coins: CoinWithPercentage[];
@@ -62,6 +68,11 @@ function SkeletonRow() {
 export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
   const configMap = new Map(pqCoinsConfig.map((c) => [c.id, c]));
   const fine = usePointerFine();
+  // Touch fallback for the hover cards: rows expand on tap instead. Requires
+  // no hover *and* no mouse, so hybrids keep the desktop behaviour.
+  const expandable = useHoverNone() && !fine;
+  const uid = useId();
+  const [openId, setOpenId] = useState<string | null>(null);
   const [hover, setHover] = useState<{
     x: number;
     y: number;
@@ -102,12 +113,27 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                 </td>
               </tr>
             ) : (
-              coins.map((coin) => {
+              coins.map((coin, index) => {
                 const config = configMap.get(coin.id);
+                const open = expandable && openId === coin.id;
+                const stripId = `${uid}-${coin.id}`;
                 return (
+                  <Fragment key={coin.id}>
                   <tr
-                    key={coin.id}
-                    className="border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
+                    className={
+                      expandable
+                        ? `cursor-pointer transition-colors ${
+                            open ? "bg-content-4" : ""
+                          }`
+                        : "border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
+                    }
+                    aria-expanded={expandable ? open : undefined}
+                    aria-controls={expandable ? stripId : undefined}
+                    onClick={
+                      expandable
+                        ? () => setOpenId((prev) => (prev === coin.id ? null : coin.id))
+                        : undefined
+                    }
                     onMouseEnter={
                       fine
                         ? (e) => setHover({ x: e.clientX, y: e.clientY, coin })
@@ -131,14 +157,26 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                         ) : (
                           <div className="w-5 h-5 bg-content-20 shrink-0" />
                         )}
-                        <a
-                          href={config?.website || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-content hover:text-flare transition-colors font-medium truncate"
-                        >
-                          {coin.symbol.toUpperCase()}
-                        </a>
+                        {/* On touch the symbol is inert text so the first tap
+                            expands the row instead of navigating; the link
+                            moves into the strip below. */}
+                        {expandable ? (
+                          <span className="text-content font-medium truncate">
+                            {coin.symbol.toUpperCase()}
+                          </span>
+                        ) : (
+                          <a
+                            href={config?.website || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            // Register 2 — navigation. Solid underline so the
+                            // ticker reads as a link at rest rather than only
+                            // colouring on hover.
+                            className="text-content underline decoration-1 underline-offset-2 hover:text-flare transition-colors font-medium truncate"
+                          >
+                            {coin.symbol.toUpperCase()}
+                          </a>
+                        )}
                         <span className="text-content-40 text-xs truncate hidden sm:inline">
                           {coin.name}
                         </span>
@@ -165,6 +203,52 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                         : `${formatPercentage(coin.percentageOfTotal)}%`}
                     </td>
                   </tr>
+                  {expandable && (
+                    <ExpandingRow
+                      id={stripId}
+                      open={open}
+                      colSpan={3}
+                      divider={index !== coins.length - 1}
+                    >
+                      <div className="text-content">
+                        {coin.market_cap === null
+                          ? "TESTNET"
+                          : formatMarketCapFull(coin.market_cap)}
+                      </div>
+                      <div className="text-content-60">
+                        {coin.market_cap === null
+                          ? "·"
+                          : `${coin.percentageOfTotal.toFixed(4)}% of total`}
+                      </div>
+                      <div className="text-sage">
+                        SIGNATURE: {config?.signature ?? "PQC (unverified)"}
+                      </div>
+                      {config?.explainer && (
+                        <div className="text-xs text-content-40 normal-case">
+                          {config.explainer}
+                        </div>
+                      )}
+                      {config?.description && (
+                        <div className="text-content-40">
+                          {config.description}
+                        </div>
+                      )}
+                      {config?.website && (
+                        <a
+                          href={config.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          // Register 2 — navigation. The ↗ glyph is the rest
+                          // affordance here, matching the Learn More pattern,
+                          // so the underline is reserved for hover.
+                          className="inline-block pt-1.5 text-flare hover:underline decoration-1 underline-offset-2"
+                        >
+                          {config.name} &#8599;
+                        </a>
+                      )}
+                    </ExpandingRow>
+                  )}
+                  </Fragment>
                 );
               })
             )}
@@ -192,6 +276,11 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
             SIGNATURE:{" "}
             {configMap.get(hover.coin.id)?.signature ?? "PQC (unverified)"}
           </div>
+          {configMap.get(hover.coin.id)?.explainer && (
+            <div className={`text-xs text-content-40 normal-case ${CARD_TEXT_WRAP}`}>
+              {configMap.get(hover.coin.id)?.explainer}
+            </div>
+          )}
         </AnnotationCard>
       )}
     </section>
