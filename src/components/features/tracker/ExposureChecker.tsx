@@ -89,7 +89,13 @@ export function ExposureChecker() {
         Enter any Ethereum address. Reads public blockchain data only.
       </p>
 
-      <form onSubmit={onSubmit} className="flex flex-col sm:flex-row gap-2">
+      {/* Stacks below 480px (input full width, button full width beneath) and
+          sits on one row above it. min-w-0 on the row is what lets the input
+          shrink instead of forcing the section wider than the viewport. */}
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col min-[480px]:flex-row gap-2 min-w-0"
+      >
         <input
           id={inputId}
           value={value}
@@ -102,11 +108,14 @@ export function ExposureChecker() {
           spellCheck={false}
           autoComplete="off"
           placeholder="0x… address or ENS name"
-          className="flex-1 min-w-0 bg-void border border-border px-4 py-3 text-content placeholder:text-content-40 tabular-nums outline-none focus:border-border-med transition-colors"
+          // size=1 kills the input's ~20ch intrinsic width, which is what was
+          // pushing the section past 320px; flex-1 gives the width back.
+          size={1}
+          className="flex-1 w-full min-w-0 bg-void border border-border px-4 py-3 text-content placeholder:text-content-40 tabular-nums outline-none focus:border-border-med transition-colors"
         />
         <button
           type="submit"
-          className="border border-border px-4 py-3 text-xs uppercase text-content-60 hover:border-flare hover:text-flare transition-colors"
+          className="w-full min-[480px]:w-auto shrink-0 border border-border px-4 py-3 text-xs uppercase text-content-60 hover:border-flare hover:text-flare transition-colors"
         >
           Run check
         </button>

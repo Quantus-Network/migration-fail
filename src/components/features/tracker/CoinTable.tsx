@@ -49,16 +49,16 @@ function formatPercentage(value: number): string {
 function SkeletonRow() {
   return (
     <tr className="border-b border-border">
-      <td className="py-2.5 px-3">
-        <div className="flex items-center gap-2">
+      <td className="py-2.5 px-2 sm:px-3">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <div className="w-5 h-5 bg-content-10 animate-pulse shrink-0" />
           <div className="h-4 w-20 bg-content-10 animate-pulse" />
         </div>
       </td>
-      <td className="py-2.5 px-3">
+      <td className="py-2.5 px-2 sm:px-3">
         <div className="h-4 w-14 bg-content-10 animate-pulse" />
       </td>
-      <td className="py-2.5 px-3">
+      <td className="py-2.5 px-2 sm:px-3">
         <div className="h-4 w-16 bg-content-10 animate-pulse" />
       </td>
     </tr>
@@ -89,13 +89,13 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border-med bg-surface">
             <tr>
-              <th className="py-2.5 px-3 font-normal text-content text-sm">
+              <th className="py-2.5 px-2 sm:px-3 font-normal text-content text-sm">
                 Coin
               </th>
-              <th className="py-2.5 px-3 font-normal text-content text-sm text-right">
+              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
                 Market Cap
               </th>
-              <th className="py-2.5 px-3 font-normal text-content text-sm text-right">
+              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
                 % of Total
               </th>
             </tr>
@@ -146,8 +146,8 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                     }
                     onMouseLeave={fine ? () => setHover(null) : undefined}
                   >
-                    <td className="py-2.5 px-3">
-                      <div className="flex items-center gap-2">
+                    <td className="py-2.5 px-2 sm:px-3">
+                      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                         {coin.image ? (
                           <img
                             src={coin.image}
@@ -161,7 +161,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                             expands the row instead of navigating; the link
                             moves into the strip below. */}
                         {expandable ? (
-                          <span className="text-content font-medium truncate">
+                          <span className="text-content font-medium truncate max-w-[7ch] sm:max-w-none">
                             {coin.symbol.toUpperCase()}
                           </span>
                         ) : (
@@ -172,7 +172,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                             // Register 2 — navigation. Solid underline so the
                             // ticker reads as a link at rest rather than only
                             // colouring on hover.
-                            className="text-content underline decoration-1 underline-offset-2 hover:text-flare transition-colors font-medium truncate"
+                            className="text-content underline decoration-1 underline-offset-2 hover:text-flare transition-colors font-medium truncate max-w-[7ch] sm:max-w-none"
                           >
                             {coin.symbol.toUpperCase()}
                           </a>
@@ -183,7 +183,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                       </div>
                     </td>
                     <td
-                      className={`py-2.5 px-3 tabular-nums text-right whitespace-nowrap ${
+                      className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
                         coin.market_cap === null
                           ? "text-xs text-content-40"
                           : "text-content"
@@ -194,7 +194,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                         : formatMarketCap(coin.market_cap)}
                     </td>
                     <td
-                      className={`py-2.5 px-3 tabular-nums text-right whitespace-nowrap ${
+                      className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
                         coin.market_cap === null ? "text-content-40" : "text-sage"
                       }`}
                     >

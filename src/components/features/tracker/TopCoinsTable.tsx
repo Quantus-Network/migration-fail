@@ -45,16 +45,16 @@ function formatPercentage(value: number): string {
 function SkeletonRow() {
   return (
     <tr className="border-b border-border">
-      <td className="py-2.5 px-3">
-        <div className="flex items-center gap-2">
+      <td className="py-2.5 px-2 sm:px-3">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <div className="w-5 h-5 bg-content-10 animate-pulse shrink-0" />
           <div className="h-4 w-16 bg-content-10 animate-pulse" />
         </div>
       </td>
-      <td className="py-2.5 px-3">
+      <td className="py-2.5 px-2 sm:px-3">
         <div className="h-4 w-14 bg-content-10 animate-pulse" />
       </td>
-      <td className="py-2.5 px-3">
+      <td className="py-2.5 px-2 sm:px-3">
         <div className="h-4 w-12 bg-content-10 animate-pulse" />
       </td>
     </tr>
@@ -84,13 +84,13 @@ export function TopCoinsTable({ coins, loading }: Props) {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border-med bg-surface">
             <tr>
-              <th className="py-2.5 px-3 font-normal text-content text-sm">
+              <th className="py-2.5 px-2 sm:px-3 font-normal text-content text-sm">
                 Coin
               </th>
-              <th className="py-2.5 px-3 font-normal text-content text-sm text-right">
+              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
                 Market Cap
               </th>
-              <th className="py-2.5 px-3 font-normal text-content text-sm text-right">
+              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
                 % of Total
               </th>
             </tr>
@@ -137,8 +137,8 @@ export function TopCoinsTable({ coins, loading }: Props) {
                   }
                   onMouseLeave={fine ? () => setHover(null) : undefined}
                 >
-                  <td className="py-2.5 px-3">
-                    <div className="flex items-center gap-2">
+                  <td className="py-2.5 px-2 sm:px-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                       <span className="text-content-40 tabular-nums w-4 text-xs">
                         {index + 1}
                       </span>
@@ -151,15 +151,15 @@ export function TopCoinsTable({ coins, loading }: Props) {
                       ) : (
                         <div className="w-5 h-5 bg-content-20 shrink-0" />
                       )}
-                      <span className="text-content font-medium truncate">
+                      <span className="text-content font-medium truncate max-w-[7ch] sm:max-w-none">
                         {coin.symbol.toUpperCase()}
                       </span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-3 tabular-nums text-content text-right whitespace-nowrap">
+                  <td className="py-2.5 px-1.5 sm:px-3 tabular-nums text-content text-right whitespace-nowrap">
                     {formatMarketCap(coin.market_cap)}
                   </td>
-                  <td className="py-2.5 px-3 tabular-nums text-flare text-right whitespace-nowrap">
+                  <td className="py-2.5 px-1.5 sm:px-3 tabular-nums text-flare text-right whitespace-nowrap">
                     {formatPercentage(coin.percentageOfTotal)}%
                   </td>
                 </tr>
