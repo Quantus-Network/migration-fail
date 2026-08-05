@@ -48,3 +48,31 @@ export const TOP_COIN_SIGNATURES: Record<string, string> = {
 export function getTopCoinSignature(id: string): string {
   return TOP_COIN_SIGNATURES[id] ?? "PQC (unverified)";
 }
+
+/**
+ * Plain-language gloss for each scheme above, for readers who don't know
+ * cryptography: scheme family plus quantum status, ~70 chars.
+ *
+ * Keyed by scheme rather than by coin because the ~40 entries above collapse
+ * to a handful of distinct schemes; duplicating the sentence per coin would
+ * only create drift. Every scheme here is elliptic-curve based (BLS included,
+ * via pairing-friendly curves) and so falls to Shor's algorithm — which is the
+ * whole point of Exhibit B. Anything unrecognised yields an empty string and
+ * renders no line at all, rather than inheriting that claim.
+ */
+const SCHEME_EXPLAINERS: Record<string, string> = {
+  "ECDSA secp256k1": "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  "ECDSA/Ed25519": "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  Ed25519: "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  "sr25519/Ed25519": "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  "EdDSA (Ed25519)": "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  "Ed25519/BLS (unverified)":
+    "Elliptic-curve signatures. Breakable by a future quantum computer.",
+};
+
+/** Empty string for an unrecognised scheme, so the caller renders no explainer
+ *  line. It must never say "Unverified" — that flag lives only in the
+ *  "(unverified)" suffix on the signature value itself. */
+export function getTopCoinExplainer(id: string): string {
+  return SCHEME_EXPLAINERS[getTopCoinSignature(id)] ?? "";
+}
