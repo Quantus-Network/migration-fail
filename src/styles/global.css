@@ -32,10 +32,6 @@
   }
 }
 
-.font-mono {
-  font-family: "Geist Mono", ui-monospace, monospace;
-}
-
 /*
  * Cryptographic-decay texture: a whisper-quiet pixel/dither mosaic sitting
  * behind the hero monument number only. CSS-only (no JS, canvas, or images):

@@ -23,6 +23,9 @@ export default {
         sage: "#6dbf8a",
         "sage-20": "rgba(109, 191, 138, 0.2)",
         "sage-10": "rgba(109, 191, 138, 0.1)",
+        // Medium/warning register, sitting between sage (safe) and flare
+        // (exposed). Currently used only by the Exhibit C risk verdict.
+        gamboge: "#E8960C",
       },
       fontFamily: {
         sans: ["Geist", "system-ui", "sans-serif"],
