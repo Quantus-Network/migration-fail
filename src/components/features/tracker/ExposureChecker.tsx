@@ -25,33 +25,18 @@ const RISK_TONE: Record<Risk, string> = {
   "VERY HIGH": "text-flare",
 };
 
-/** The stamp's label column, so every value starts on the same axis. */
-function StampLine({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="grid grid-cols-[8.5rem_1fr] gap-2">
-      <span className="uppercase tracking-widest text-content-40">{label}</span>
-      <span>{children}</span>
-    </div>
-  );
-}
-
 function Skeleton() {
   return (
     <div className="mt-8">
-      {/* One bar per stamp line: address, public key, balance, risk. */}
-      <div className="border-y border-border py-4 space-y-2.5 animate-pulse">
-        <div className="h-3 w-64 max-w-full bg-content-10" />
-        <div className="h-3 w-52 max-w-full bg-content-10" />
-        <div className="h-3 w-56 max-w-full bg-content-10" />
+      {/* Mirrors the stamp's shape: address, RISK label, the verdict at
+          display size, then the summary sentence. */}
+      <div className="border-y border-border py-5 animate-pulse">
         <div className="h-3 w-40 max-w-full bg-content-10" />
+        <div className="h-3 w-12 max-w-full bg-content-10 mt-5" />
+        <div className="h-10 md:h-12 w-56 max-w-full bg-content-10 mt-2" />
+        <div className="h-4 w-72 max-w-full bg-content-10 mt-4" />
       </div>
-      <p className="mt-3 text-xs uppercase tracking-widest text-content-40">
+      <p className="mt-3 text-xs uppercase text-content-40">
         Scanning chain data&hellip;
       </p>
     </div>
@@ -96,7 +81,7 @@ export function ExposureChecker() {
 
   return (
     <section className="py-8">
-      <h3 className="text-sm uppercase tracking-widest text-content mb-6">
+      <h3 className="text-sm uppercase text-content mb-6">
         EXHIBIT C &middot; CHECK YOUR OWN EXPOSURE
       </h3>
 
@@ -121,14 +106,14 @@ export function ExposureChecker() {
         />
         <button
           type="submit"
-          className="border border-border px-4 py-3 text-xs uppercase tracking-widest text-content-60 hover:border-flare hover:text-flare transition-colors"
+          className="border border-border px-4 py-3 text-xs uppercase text-content-60 hover:border-flare hover:text-flare transition-colors"
         >
           Run check
         </button>
       </form>
 
       {invalid && (
-        <p className="mt-2 text-xs uppercase tracking-widest text-flare">
+        <p className="mt-2 text-xs uppercase text-flare">
           Invalid address format
         </p>
       )}
@@ -139,35 +124,41 @@ export function ExposureChecker() {
         {phase === "loading" && <Skeleton />}
 
         {phase === "error" && (
-          <p className="mt-8 text-xs uppercase tracking-widest text-flare">
+          <p className="mt-8 text-xs uppercase text-flare">
             Scan failed &middot; try again
           </p>
         )}
 
         {phase === "done" && result && risk && (
           <>
-            <div className="mt-8 border-y border-border py-4 space-y-1.5 text-xs tabular-nums">
-              <StampLine label="Address">
-                <span className="text-content">
-                  {truncateAddress(scanned)}
-                </span>
-              </StampLine>
+            <div className="mt-8 border-y border-border py-5">
+              {/* What was scanned, kept quiet: it identifies the reading
+                  without competing with the verdict. */}
+              {/* Only the label uppercases. The address must keep its own
+                  casing: EIP-55 encodes the checksum in it, and "0X" reads as
+                  a rendering fault. */}
+              <p className="text-xs text-content-40 tabular-nums">
+                <span className="uppercase">Address</span>{" "}
+                {truncateAddress(scanned)}
+              </p>
 
-              <StampLine label="Public key">
+              <p className="mt-5 text-xs uppercase text-content-40">Risk:</p>
+              <p
+                className={`text-4xl md:text-5xl leading-none ${RISK_TONE[risk]}`}
+              >
+                {risk}
+              </p>
+
+              <p className="mt-4 text-base text-content-60">
                 <span className={result.exposed ? "text-flare" : "text-sage"}>
-                  {result.exposed ? "EXPOSED" : "NOT YET EXPOSED"}
+                  Public key {result.exposed ? "exposed" : "not yet exposed"}
                 </span>
-              </StampLine>
-
-              <StampLine label="Balance">
-                <span className="text-content">
+                {" · "}
+                <span className="tabular-nums text-content">
                   {formatEth(result.balanceEth)}
-                </span>
-              </StampLine>
-
-              <StampLine label="Risk">
-                <span className={RISK_TONE[risk]}>{risk}</span>
-              </StampLine>
+                </span>{" "}
+                {result.exposed ? "at risk" : "held"}
+              </p>
             </div>
 
             <p className="mt-3 text-xs text-content-40">

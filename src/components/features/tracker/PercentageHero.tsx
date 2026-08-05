@@ -139,7 +139,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
         <div className="text-flare">
           <p className="text-lg mb-2">FAILED TO LOAD DATA</p>
           {isRateLimited(error) ? (
-            <p className="text-sm text-content-40 tracking-wider">
+            <p className="text-sm text-content-40">
               RATE LIMITED &middot; RETRYING AUTOMATICALLY
             </p>
           ) : (
@@ -157,7 +157,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
       ) : data ? (
         <>
           {/* Kicker, doubling as the SEO h1 */}
-          <h1 className="text-xs uppercase tracking-widest text-content-40 mb-8">
+          <h1 className="text-xs uppercase text-content-40 mb-8">
             Share of Crypto Market Cap Not Yet Quantum Secure
           </h1>
 
@@ -191,7 +191,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
 
           {/* The gauge, between the statement line and the stamp */}
           <div className="mt-8">
-            <div className="flex justify-between mb-2 tabular-nums text-xs uppercase tracking-widest">
+            <div className="flex justify-between mb-2 tabular-nums text-xs uppercase">
               <span className="text-sage">
                 SECURED {formatMarketCap(data.pqMarketCap)}
               </span>
@@ -228,7 +228,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
 
           {/* (b) The document stamp: closing rule of the hero */}
           <div className="mt-8 border-t border-border">
-            <p className="text-xs uppercase tracking-widest tabular-nums text-content-40 py-3">
+            <p className="text-xs uppercase tabular-nums text-content-40 py-3">
               LAST OBSERVED: {formatObserved(observed)} &middot; SOURCE:
               COINGECKO &middot; STATUS: NOT MIGRATED
             </p>

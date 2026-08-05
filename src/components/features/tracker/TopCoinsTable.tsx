@@ -76,7 +76,7 @@ export function TopCoinsTable({ coins, loading }: Props) {
 
   return (
     <section className="py-8">
-      <h3 className="text-sm uppercase tracking-widest text-content mb-6">
+      <h3 className="text-sm uppercase text-content mb-6">
         EXHIBIT B &middot; TOP 20 &middot; ALL VULNERABLE
       </h3>
 

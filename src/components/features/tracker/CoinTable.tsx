@@ -81,7 +81,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
 
   return (
     <section className="py-8">
-      <h3 className="text-sm uppercase tracking-widest text-content mb-6">
+      <h3 className="text-sm uppercase text-content mb-6">
         EXHIBIT A &middot; QUANTUM-SECURE COINS
       </h3>
 
