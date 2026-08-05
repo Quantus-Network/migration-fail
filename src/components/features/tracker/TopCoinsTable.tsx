@@ -76,7 +76,7 @@ export function TopCoinsTable({ coins, loading }: Props) {
 
   return (
     <section className="py-8">
-      <h3 className="font-mono text-sm uppercase tracking-widest text-content mb-6">
+      <h3 className="text-sm uppercase tracking-widest text-content mb-6">
         EXHIBIT B &middot; TOP 20 &middot; ALL VULNERABLE
       </h3>
 
@@ -139,7 +139,7 @@ export function TopCoinsTable({ coins, loading }: Props) {
                 >
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-content-40 font-mono w-4 text-xs">
+                      <span className="text-content-40 tabular-nums w-4 text-xs">
                         {index + 1}
                       </span>
                       {coin.image ? (
@@ -156,10 +156,10 @@ export function TopCoinsTable({ coins, loading }: Props) {
                       </span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-3 font-mono text-content text-right whitespace-nowrap">
+                  <td className="py-2.5 px-3 tabular-nums text-content text-right whitespace-nowrap">
                     {formatMarketCap(coin.market_cap)}
                   </td>
-                  <td className="py-2.5 px-3 font-mono text-flare text-right whitespace-nowrap">
+                  <td className="py-2.5 px-3 tabular-nums text-flare text-right whitespace-nowrap">
                     {formatPercentage(coin.percentageOfTotal)}%
                   </td>
                 </tr>

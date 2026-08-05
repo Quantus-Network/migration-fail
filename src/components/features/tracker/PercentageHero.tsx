@@ -136,7 +136,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
   return (
     <section className="pt-16 md:pt-24 pb-24 md:pb-32">
       {error ? (
-        <div className="font-mono text-flare">
+        <div className="text-flare">
           <p className="text-lg mb-2">FAILED TO LOAD DATA</p>
           {isRateLimited(error) ? (
             <p className="text-sm text-content-40 tracking-wider">
@@ -157,7 +157,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
       ) : data ? (
         <>
           {/* Kicker, doubling as the SEO h1 */}
-          <h1 className="font-mono text-xs uppercase tracking-widest text-content-40 mb-8">
+          <h1 className="text-xs uppercase tracking-widest text-content-40 mb-8">
             Share of Crypto Market Cap Not Yet Quantum Secure
           </h1>
 
@@ -181,7 +181,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
             </span>{" "}
             <span className="text-content-60 text-xl">still vulnerable</span>
           </p>
-          <p className="mt-2 font-mono text-sm">
+          <p className="mt-2 tabular-nums text-sm">
             <span className="text-sage">
               {formatPercentage(data.pqPercentage)}% (
               {formatMarketCap(data.pqMarketCap)})
@@ -191,7 +191,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
 
           {/* The gauge, between the statement line and the stamp */}
           <div className="mt-8">
-            <div className="flex justify-between mb-2 font-mono text-xs">
+            <div className="flex justify-between mb-2 tabular-nums text-xs uppercase tracking-widest">
               <span className="text-sage">
                 SECURED {formatMarketCap(data.pqMarketCap)}
               </span>
@@ -220,7 +220,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
                 style={{ width: fillWidth }}
               />
             </div>
-            <div className="flex justify-between mt-2 font-mono text-xs text-content-40">
+            <div className="flex justify-between mt-2 tabular-nums text-xs text-content-40">
               <span>0%</span>
               <span>100%</span>
             </div>
@@ -228,7 +228,7 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
 
           {/* (b) The document stamp: closing rule of the hero */}
           <div className="mt-8 border-t border-border">
-            <p className="font-mono text-xs tracking-wider text-content-40 py-3">
+            <p className="text-xs uppercase tracking-widest tabular-nums text-content-40 py-3">
               LAST OBSERVED: {formatObserved(observed)} &middot; SOURCE:
               COINGECKO &middot; STATUS: NOT MIGRATED
             </p>

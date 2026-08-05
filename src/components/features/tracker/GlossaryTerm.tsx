@@ -159,7 +159,7 @@ export function GlossaryTerm({ term, href, children }: Props) {
         <span
           ref={cardRef}
           role="tooltip"
-          className={`pointer-events-none fixed z-50 block w-max max-w-[300px] border border-border-med bg-surface px-3 py-2 text-xs leading-relaxed text-content-70 normal-case ${
+          className={`pointer-events-none fixed z-50 block w-max max-w-[300px] border border-border-med bg-surface px-3 py-2 text-xs leading-relaxed tabular-nums text-content-70 normal-case ${
             pos ? "" : "invisible"
           }`}
           // maxWidth is also set inline so the cap holds even if the utility

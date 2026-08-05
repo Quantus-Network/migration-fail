@@ -66,7 +66,7 @@ export function AnnotationCard({ x, y, children }: AnnotationCardProps) {
 
   return (
     <div
-      className="pointer-events-none fixed z-50 border border-border-med bg-surface px-3 py-2 font-mono text-xs space-y-1 whitespace-nowrap"
+      className="pointer-events-none fixed z-50 border border-border-med bg-surface px-3 py-2 tabular-nums text-xs space-y-1 whitespace-nowrap"
       style={{ left, top }}
     >
       {children}
@@ -139,7 +139,7 @@ export function ExpandingRow({
         >
           <div
             ref={contentRef}
-            className="border-t border-border-med bg-surface px-3 py-2.5 font-mono text-xs space-y-1"
+            className="border-t border-border-med bg-surface px-3 py-2.5 tabular-nums text-xs space-y-1"
           >
             {children}
           </div>

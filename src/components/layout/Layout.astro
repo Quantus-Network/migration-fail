@@ -2,8 +2,10 @@
 import "@/styles/global.css";
 import "@fontsource/geist/400.css";
 import "@fontsource/geist/500.css";
-import "@fontsource/geist-mono/400.css";
-import "@fontsource/geist-mono/500.css";
+// Geist Mono is intentionally not loaded for the page: the site is Geist-only,
+// with tabular-nums carrying the column alignment mono used to provide. The OG
+// image still renders in Geist Mono, but it loads the woff directly from
+// public/fonts via src/lib/og-fonts.ts and does not use these @font-face rules.
 
 import Navbar from "@/components/layout/Navbar.astro";
 import Footer from "@/components/layout/Footer.astro";

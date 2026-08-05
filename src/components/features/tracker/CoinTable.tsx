@@ -81,7 +81,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
 
   return (
     <section className="py-8">
-      <h3 className="font-mono text-sm uppercase tracking-widest text-content mb-6">
+      <h3 className="text-sm uppercase tracking-widest text-content mb-6">
         EXHIBIT A &middot; QUANTUM-SECURE COINS
       </h3>
 
@@ -183,7 +183,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                       </div>
                     </td>
                     <td
-                      className={`py-2.5 px-3 font-mono text-right whitespace-nowrap ${
+                      className={`py-2.5 px-3 tabular-nums text-right whitespace-nowrap ${
                         coin.market_cap === null
                           ? "text-xs text-content-40"
                           : "text-content"
@@ -194,7 +194,7 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                         : formatMarketCap(coin.market_cap)}
                     </td>
                     <td
-                      className={`py-2.5 px-3 font-mono text-right whitespace-nowrap ${
+                      className={`py-2.5 px-3 tabular-nums text-right whitespace-nowrap ${
                         coin.market_cap === null ? "text-content-40" : "text-sage"
                       }`}
                     >

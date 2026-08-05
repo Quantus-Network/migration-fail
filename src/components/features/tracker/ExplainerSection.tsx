@@ -66,7 +66,7 @@ export function ExplainerSection() {
 
   return (
     <section className="py-12 border-t border-border mt-8">
-      <h3 className="text-sm font-mono font-medium text-content mb-6 uppercase tracking-widest">
+      <h3 className="text-sm font-medium text-content mb-6 uppercase tracking-widest">
         What is Post-Quantum Cryptography?
       </h3>
 
@@ -103,7 +103,7 @@ export function ExplainerSection() {
       </div>
 
       <div className="mt-8">
-        <h4 className="text-sm font-mono font-medium text-content-60 uppercase tracking-widest mb-4">
+        <h4 className="text-sm font-medium text-content-60 uppercase tracking-widest mb-4">
           Learn More
         </h4>
         <ul className="space-y-2">
@@ -130,7 +130,7 @@ export function ExplainerSection() {
       </div>
 
       <div className="mt-12 pt-8 border-t border-border">
-        <h4 className="text-sm font-mono font-medium text-content-60 uppercase tracking-widest mb-4">
+        <h4 className="text-sm font-medium text-content-60 uppercase tracking-widest mb-4">
           Methodology
         </h4>
         <div className="space-y-3 text-content-40 text-sm">
