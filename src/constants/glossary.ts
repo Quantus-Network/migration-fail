@@ -61,6 +61,15 @@ export const GLOSSARY: Record<string, string> = {
   Ed25519:
     "Classical elliptic-curve signatures, fast and widely used. Quantum-breakable.",
 
+  // Column headers in the signature scheme specification table. Distinct from
+  // "public keys" above, which explains the key pair in prose; these explain
+  // what the byte figure under each header costs the reader.
+  "Public Key":
+    "The key others use to verify your signature. Bigger keys mean bulkier transactions.",
+
+  Signature:
+    "The proof attached to every transaction. Its size directly drives fees.",
+
   // Exhibit C renders the L-value of each scheme as a glossary term.
   "NIST level 5":
     "NIST security level 5, the highest standardized strength.",
