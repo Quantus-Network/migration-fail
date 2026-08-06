@@ -35,6 +35,16 @@ export const GLOSSARY: Record<string, string> = {
 
   "public keys":
     "The shareable half of a key pair; the secret half is what authorises spending.",
+
+  // Exhibit C renders the L-value of each scheme as a glossary term.
+  "NIST level 5":
+    "NIST security level 5, the highest standardized strength.",
+
+  "NIST level 3":
+    "NIST security level 3, a middle standardized strength.",
+
+  "NIST level 1":
+    "NIST security level 1, the lowest standardized strength.",
 };
 
 export function getDefinition(term: string): string | undefined {

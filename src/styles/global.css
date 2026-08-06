@@ -7,6 +7,14 @@
     background-color: #0e0e0e;
     color: #e8e6e0;
     font-family: "Geist", system-ui, sans-serif;
+    /* For the hero's #check anchor. Respects a reduced-motion preference. */
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {

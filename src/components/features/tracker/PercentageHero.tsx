@@ -232,6 +232,17 @@ export function PercentageHero({ data, loading, error, observedAt }: Props) {
               LAST OBSERVED: {formatObserved(observed)} &middot; SOURCE:
               COINGECKO &middot; STATUS: NOT MIGRATED
             </p>
+            {/* Turns the headline figure into a question about the reader.
+                Navigation register: flare, arrow as the rest affordance. */}
+            <p className="pb-3">
+              <a
+                href="#check"
+                className="text-sm uppercase text-flare hover:underline decoration-1 underline-offset-2 transition-colors"
+              >
+                Check your own exposure{" "}
+                <span aria-hidden="true">&darr;</span>
+              </a>
+            </p>
           </div>
 
           {fine && gaugeHover && (

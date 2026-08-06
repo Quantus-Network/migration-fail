@@ -4,6 +4,7 @@ import { fetchTrackerData, type TrackerData } from "@/types/coingecko";
 import { PercentageHero } from "./PercentageHero";
 import { CoinTable } from "./CoinTable";
 import { TopCoinsTable } from "./TopCoinsTable";
+import { ReadinessTable } from "./ReadinessTable";
 import { ExposureChecker } from "./ExposureChecker";
 import { ExplainerSection } from "./ExplainerSection";
 
@@ -79,6 +80,10 @@ export function PQTracker() {
       />
 
       <TopCoinsTable coins={data?.topCoins || []} loading={loading} />
+
+      {/* C then D: the readiness assessment sets up the question that the
+          checker answers about the reader's own address. */}
+      <ReadinessTable />
 
       <ExposureChecker />
 

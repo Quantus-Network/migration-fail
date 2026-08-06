@@ -80,9 +80,9 @@ export function ExposureChecker() {
   const risk = result ? deriveRisk(result) : null;
 
   return (
-    <section className="py-8">
+    <section id="check" className="py-8 scroll-mt-8">
       <h3 className="text-sm uppercase text-content mb-6">
-        EXHIBIT C &middot; CHECK YOUR OWN EXPOSURE
+        EXHIBIT D &middot; CHECK YOUR OWN EXPOSURE
       </h3>
 
       <p className="text-content-40 text-sm mb-6">
@@ -111,7 +111,7 @@ export function ExposureChecker() {
           // size=1 kills the input's ~20ch intrinsic width, which is what was
           // pushing the section past 320px; flex-1 gives the width back.
           size={1}
-          className="flex-1 w-full min-w-0 bg-void border border-border px-4 py-3 text-content placeholder:text-content-40 tabular-nums outline-none focus:border-border-med transition-colors"
+          className="flex-1 w-full min-w-0 bg-void border border-border px-4 py-4 text-lg text-content placeholder:text-content-40 tabular-nums outline-none focus:border-border-med transition-colors"
         />
         <button
           type="submit"
