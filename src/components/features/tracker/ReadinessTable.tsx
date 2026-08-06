@@ -37,7 +37,7 @@ function DimensionRow({
       >
         {pass ? "✓" : "✕"}
       </span>
-      <span className="min-w-0">
+      <span className="min-w-0 break-words">
         <span className="text-content">{DIMENSION_LABELS[dimension]}</span>{" "}
         <span className="text-content-60">{d.evidence}</span>
         {d.uncertain && (
@@ -85,16 +85,16 @@ export function ReadinessTable() {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border-med bg-surface">
             <tr>
-              <th className="py-2.5 px-2 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Chain
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Grade
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Status
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Scheme
               </th>
             </tr>
@@ -118,7 +118,7 @@ export function ReadinessTable() {
                       )
                     }
                   >
-                    <td className="py-2.5 px-2 sm:px-3">
+                    <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3">
                       <div className="flex items-baseline gap-1.5 sm:gap-2 min-w-0">
                         {/* The affordance: a quiet +/- that turns flare on
                             hover, rather than a chevron. */}
@@ -128,28 +128,48 @@ export function ReadinessTable() {
                         >
                           {open ? "−" : "+"}
                         </span>
-                        <span className="text-content truncate max-w-[9ch] sm:max-w-none">
+                        <span className="text-content truncate max-w-[7ch] min-[360px]:max-w-[10ch] min-[480px]:max-w-[16ch] sm:max-w-none">
                           {chain.name}
                         </span>
-                        <span className="text-content-40 text-xs truncate">
+                        {/* The ticker is the first thing to go, and it stays
+                            gone until 480. Measured: with it visible at 400px
+                            the Chain column demands 162px against a 131px
+                            budget, so the table cannot fit its container. The
+                            name already identifies the row and the expansion
+                            carries everything in full. */}
+                        <span className="hidden min-[480px]:inline text-content-40 text-xs truncate">
                           {chain.ticker}
                         </span>
                       </div>
                     </td>
-                    <td className="py-2.5 px-1.5 sm:px-3">
+                    <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3">
                       <span
-                        className={`inline-block px-1.5 py-0.5 text-xs font-bold tabular-nums ${tone.bg} ${tone.text}`}
+                        className={`inline-block px-1 min-[480px]:px-1.5 py-0.5 text-xs font-bold tabular-nums ${tone.bg} ${tone.text}`}
                       >
                         {chain.grade}
                       </span>
                     </td>
-                    <td className="py-2.5 px-1.5 sm:px-3 text-xs text-content-40 uppercase whitespace-nowrap">
-                      {chain.status}
+                    {/* Abbreviated rather than reduced to a dot: a dot would
+                        need a tooltip to be legible, and tooltips are gated to
+                        hover-capable devices — so on the phones this targets
+                        the column would carry no information at all. */}
+                    <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 text-xs text-content-40 uppercase whitespace-nowrap">
+                      <span className="min-[480px]:hidden">
+                        {chain.status === "Testnet" ? "Test" : "Main"}
+                      </span>
+                      <span className="hidden min-[480px]:inline">
+                        {chain.status}
+                      </span>
                     </td>
-                    <td className="py-2.5 px-1.5 sm:px-3 text-xs whitespace-nowrap">
-                      <GlossaryTerm term={chain.scheme}>
-                        {chain.scheme}
-                      </GlossaryTerm>
+                    <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 text-xs whitespace-nowrap">
+                      {/* The scheme name is the last thing to compress and the
+                          only one that can be clipped without losing meaning:
+                          the expansion below carries it in full. */}
+                      <span className="inline-block align-bottom overflow-hidden text-ellipsis whitespace-nowrap max-w-[5ch] min-[360px]:max-w-[9ch] min-[480px]:max-w-none">
+                        <GlossaryTerm term={chain.scheme}>
+                          {chain.scheme}
+                        </GlossaryTerm>
+                      </span>
                       <span className="text-content-40"> &middot; </span>
                       <GlossaryTerm term={`NIST level ${chain.nistLevel}`}>
                         L{chain.nistLevel}
@@ -180,23 +200,51 @@ export function ReadinessTable() {
       <h4 className="text-sm uppercase text-content-60 mt-12 mb-4">
         Signature scheme specifications
       </h4>
-      <div className="border border-border">
+      {/* Below sm the five columns become one card per scheme. Compression
+          could not save this table: Public Key and Signature are both headers
+          longer than their values, so the columns cannot go narrow enough. */}
+      <div className="border border-border sm:hidden">
+        {SCHEME_SPECS.map((spec) => (
+          <div
+            key={spec.scheme}
+            className="border-b border-border last:border-b-0 px-2 py-3"
+          >
+            <div className="flex items-baseline justify-between gap-2">
+              <GlossaryTerm term={spec.scheme}>{spec.scheme}</GlossaryTerm>
+              <span
+                className={`shrink-0 text-xs uppercase ${
+                  spec.type === "PQ" ? "text-sage" : "text-flare"
+                }`}
+              >
+                {spec.type === "PQ" ? "PQ" : "Classical"}
+              </span>
+            </div>
+            <div className="mt-1 text-xs text-content-60 tabular-nums">
+              L{spec.level} &middot; Public key{" "}
+              {spec.publicKeyBytes.toLocaleString()} B &middot; Signature{" "}
+              {spec.signatureBytes.toLocaleString()} B
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="border border-border hidden sm:block">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-border-med bg-surface">
             <tr>
-              <th className="py-2.5 px-2 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Scheme
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm">
                 Type
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm text-right">
                 Level
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm text-right">
                 Public Key
               </th>
-              <th className="py-2.5 px-1.5 sm:px-3 font-normal text-content text-sm text-right">
+              <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm text-right">
                 Signature
               </th>
             </tr>
@@ -211,25 +259,25 @@ export function ReadinessTable() {
                     : undefined
                 }
               >
-                <td className="py-2.5 px-2 sm:px-3 text-content whitespace-nowrap">
+                <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 text-content whitespace-nowrap">
                   <GlossaryTerm term={spec.scheme}>{spec.scheme}</GlossaryTerm>
                 </td>
                 <td
-                  className={`py-2.5 px-1.5 sm:px-3 text-xs uppercase whitespace-nowrap ${
+                  className={`py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 text-xs uppercase whitespace-nowrap ${
                     spec.type === "PQ" ? "text-sage" : "text-flare"
                   }`}
                 >
                   {spec.type}
                 </td>
-                <td className="py-2.5 px-1.5 sm:px-3 text-xs text-right whitespace-nowrap">
+                <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 text-xs text-right whitespace-nowrap">
                   <GlossaryTerm term={`NIST level ${spec.level}`}>
                     L{spec.level}
                   </GlossaryTerm>
                 </td>
-                <td className="py-2.5 px-1.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
+                <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
                   {spec.publicKeyBytes.toLocaleString()}
                 </td>
-                <td className="py-2.5 px-1.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
+                <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
                   {spec.signatureBytes.toLocaleString()}
                 </td>
               </tr>
