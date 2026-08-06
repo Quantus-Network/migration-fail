@@ -167,13 +167,23 @@ export function GlossaryTerm({ term, href, children }: Props) {
         <span
           ref={cardRef}
           role="tooltip"
-          className={`pointer-events-none fixed z-50 block w-max max-w-[300px] border border-border-med bg-surface px-3 py-2 text-xs leading-relaxed tabular-nums text-content-70 normal-case ${
+          className={`pointer-events-none fixed z-50 block w-max max-w-[300px] whitespace-normal break-words text-left font-normal normal-case tracking-normal border border-border-med bg-surface px-3 py-2 text-xs leading-relaxed tabular-nums text-content-70 ${
             pos ? "" : "invisible"
           }`}
-          // maxWidth is also set inline so the cap holds even if the utility
-          // class is ever purged — this is the difference between a compact
-          // card and a full-width banner across the paragraph.
-          style={{ left: pos?.left ?? 0, top: pos?.top ?? 0, maxWidth: MAX_W }}
+          // These three are set inline as well as by utility class because they
+          // are the properties an ancestor can break the card with. `position:
+          // fixed` takes the card out of flow but does NOT stop inheritance:
+          // hosted inside a table cell carrying `whitespace-nowrap`, the
+          // definition could not wrap, so it ran out of the 300px box as one
+          // long line. `text-align` leaks the same way from right-aligned
+          // cells. maxWidth is pinned for the same belt-and-braces reason.
+          style={{
+            left: pos?.left ?? 0,
+            top: pos?.top ?? 0,
+            maxWidth: MAX_W,
+            whiteSpace: "normal",
+            textAlign: "left",
+          }}
         >
           {definition}
         </span>
