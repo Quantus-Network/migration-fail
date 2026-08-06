@@ -103,11 +103,11 @@ export function ExposureChecker() {
             setValue(e.target.value);
             if (invalid) setInvalid(false);
           }}
-          aria-label="Ethereum address or ENS name"
+          aria-label="Ethereum address"
           aria-invalid={invalid || undefined}
           spellCheck={false}
           autoComplete="off"
-          placeholder="0x… address or ENS name"
+          placeholder="0x… address"
           // size=1 kills the input's ~20ch intrinsic width, which is what was
           // pushing the section past 320px; flex-1 gives the width back.
           size={1}
