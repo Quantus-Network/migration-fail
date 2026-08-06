@@ -7,6 +7,14 @@
     background-color: #0e0e0e;
     color: #e8e6e0;
     font-family: "Geist", system-ui, sans-serif;
+    /* For the hero's #check anchor. Respects a reduced-motion preference. */
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   body {
@@ -29,6 +37,34 @@
     color: #ff6b35;
     text-decoration: none;
     transition: color 0.15s ease;
+  }
+}
+
+/*
+ * Simulated text caret for Exhibit D's arrival state, used on devices where we
+ * deliberately do not take real focus (taking it would raise the on-screen
+ * keyboard unasked). Steps rather than a fade, so it reads as a terminal
+ * cursor rather than a pulse. Reduced motion holds it steady instead.
+ */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret-blink {
+  animation: caret-blink 1.06s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret-blink {
+    animation: none;
+    opacity: 1;
   }
 }
 

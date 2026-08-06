@@ -1,4 +1,5 @@
-import { useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { usePointerFine } from "./HoverAnnotation";
 import {
   checkAddress,
   deriveRisk,
@@ -45,6 +46,12 @@ function Skeleton() {
 
 export function ExposureChecker() {
   const inputId = useId();
+  const fine = usePointerFine();
+  const sectionRef = useRef<HTMLElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  /** The instrument is dimmed until the section is actually being read. */
+  const [awake, setAwake] = useState(false);
+  const [hasFocus, setHasFocus] = useState(false);
   const [value, setValue] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [invalid, setInvalid] = useState(false);
@@ -52,6 +59,36 @@ export function ExposureChecker() {
   // The input the result belongs to, frozen at submit so the stamp keeps
   // showing what was actually scanned while the field is edited.
   const [scanned, setScanned] = useState("");
+
+  /**
+   * Wake once per page load when the section is meaningfully on screen.
+   *
+   * Real focus is taken only on fine pointers, and only via
+   * `preventScroll: true` so it cannot yank the page mid-scroll. On touch we
+   * deliberately do not focus: that would raise the on-screen keyboard without
+   * being asked, so those devices get the simulated caret instead.
+   */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || awake) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setAwake(true);
+        observer.disconnect();
+        if (fine) inputRef.current?.focus({ preventScroll: true });
+      },
+      { threshold: 0.4 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fine, awake]);
+
+  // Only while the field is genuinely empty and unfocused; a real caret takes
+  // over the moment focus lands, including the programmatic focus above.
+  const showCaret = awake && !hasFocus && value === "";
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -80,9 +117,9 @@ export function ExposureChecker() {
   const risk = result ? deriveRisk(result) : null;
 
   return (
-    <section className="py-8">
+    <section ref={sectionRef} id="check" className="py-8 scroll-mt-8">
       <h3 className="text-sm uppercase text-content mb-6">
-        EXHIBIT C &middot; CHECK YOUR OWN EXPOSURE
+        EXHIBIT D &middot; CHECK YOUR OWN EXPOSURE
       </h3>
 
       <p className="text-content-40 text-sm mb-6">
@@ -96,26 +133,45 @@ export function ExposureChecker() {
         onSubmit={onSubmit}
         className="flex flex-col min-[480px]:flex-row gap-2 min-w-0"
       >
-        <input
-          id={inputId}
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-            if (invalid) setInvalid(false);
-          }}
-          aria-label="Ethereum address or ENS name"
-          aria-invalid={invalid || undefined}
-          spellCheck={false}
-          autoComplete="off"
-          placeholder="0x… address or ENS name"
-          // size=1 kills the input's ~20ch intrinsic width, which is what was
-          // pushing the section past 320px; flex-1 gives the width back.
-          size={1}
-          className="flex-1 w-full min-w-0 bg-void border border-border px-4 py-3 text-content placeholder:text-content-40 tabular-nums outline-none focus:border-border-med transition-colors"
-        />
+        <div className="relative flex-1 min-w-0">
+          <input
+            ref={inputRef}
+            id={inputId}
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              if (invalid) setInvalid(false);
+            }}
+            onFocus={() => setHasFocus(true)}
+            onBlur={() => setHasFocus(false)}
+            aria-label="Ethereum address"
+            aria-invalid={invalid || undefined}
+            spellCheck={false}
+            autoComplete="off"
+            placeholder="0x… address"
+            // size=1 kills the input's ~20ch intrinsic width, which is what was
+            // pushing the section past 320px; w-full gives the width back.
+            size={1}
+            className={`w-full min-w-0 bg-void border px-4 py-4 text-lg text-content placeholder:text-content-40 tabular-nums outline-none transition-colors duration-300 motion-reduce:transition-none ${
+              awake ? "border-content" : "border-border"
+            }`}
+          />
+          {showCaret && (
+            <span
+              aria-hidden="true"
+              className="caret-blink pointer-events-none absolute left-4 top-1/2 h-6 w-px -translate-y-1/2 bg-content"
+            />
+          )}
+        </div>
         <button
           type="submit"
-          className="w-full min-[480px]:w-auto shrink-0 border border-border px-4 py-3 text-xs uppercase text-content-60 hover:border-flare hover:text-flare transition-colors"
+          // Idle dimmed, sharpening to full content on arrival. Flare stays
+          // reserved for hover and press, so waking never looks like a hover.
+          className={`w-full min-[480px]:w-auto shrink-0 border px-4 py-3 text-xs uppercase transition-colors duration-300 motion-reduce:transition-none hover:border-flare hover:text-flare ${
+            awake
+              ? "border-content text-content"
+              : "border-border text-content-60"
+          }`}
         >
           Run check
         </button>

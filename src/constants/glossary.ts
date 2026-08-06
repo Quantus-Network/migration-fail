@@ -35,6 +35,41 @@ export const GLOSSARY: Record<string, string> = {
 
   "public keys":
     "The shareable half of a key pair; the secret half is what authorises spending.",
+
+  // Signature schemes named in Exhibit C. ECDSA is defined above and covers
+  // both its Exhibit B and Exhibit C appearances.
+  "Dilithium-5":
+    "Lattice-based signatures at the strongest NIST setting. The most widely adopted post-quantum choice.",
+
+  "Dilithium-3":
+    "The same lattice scheme at a lower setting: smaller keys, lower rated strength.",
+
+  "Falcon-1024":
+    "Compact lattice-based signatures, awaiting final NIST standardization.",
+
+  "Falcon-512":
+    "The lighter Falcon setting: the smallest post-quantum signatures here, at lower rated strength.",
+
+  XMSS: "Hash-based signatures. Quantum-resistant, but each key can sign only a set number of times.",
+
+  "WOTS+":
+    "Hash-based signatures where each key is designed to sign only once.",
+
+  Schnorr:
+    "Classical elliptic-curve signatures, used by Bitcoin. Quantum-breakable.",
+
+  Ed25519:
+    "Classical elliptic-curve signatures, fast and widely used. Quantum-breakable.",
+
+  // Exhibit C renders the L-value of each scheme as a glossary term.
+  "NIST level 5":
+    "NIST security level 5, the highest standardized strength.",
+
+  "NIST level 3":
+    "NIST security level 3, a middle standardized strength.",
+
+  "NIST level 1":
+    "NIST security level 1, the lowest standardized strength.",
 };
 
 export function getDefinition(term: string): string | undefined {
