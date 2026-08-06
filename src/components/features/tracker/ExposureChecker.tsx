@@ -2,10 +2,8 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { usePointerFine } from "./HoverAnnotation";
 import {
   checkAddress,
-  deriveRisk,
   formatEth,
-  isValidAddressInput,
-  truncateAddress,
+  isValidCheckerInput,
   type ExposureResult,
   type Risk,
 } from "@/lib/exposure-check";
@@ -14,9 +12,8 @@ type Phase = "idle" | "loading" | "done" | "error";
 
 /**
  * Five verdicts over our three palette tokens: sage reads safe, Gamboge warns,
- * flare marks exposed value. The quantus.com labels are reused for family
- * consistency, but their colours are off-palette stock Tailwind and are
- * deliberately not imported.
+ * flare marks exposed value. Labels match the website quantum-risk-checker
+ * risk bands; colours stay on the tracker palette.
  */
 const RISK_TONE: Record<Risk, string> = {
   "VERY LOW": "text-sage",
@@ -56,9 +53,6 @@ export function ExposureChecker() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [invalid, setInvalid] = useState(false);
   const [result, setResult] = useState<ExposureResult | null>(null);
-  // The input the result belongs to, frozen at submit so the stamp keeps
-  // showing what was actually scanned while the field is edited.
-  const [scanned, setScanned] = useState("");
 
   /**
    * Wake once per page load when the section is meaningfully on screen.
@@ -94,7 +88,7 @@ export function ExposureChecker() {
     event.preventDefault();
     const entry = value.trim();
 
-    if (!isValidAddressInput(entry)) {
+    if (!isValidCheckerInput(entry)) {
       setInvalid(true);
       setPhase("idle");
       setResult(null);
@@ -102,7 +96,6 @@ export function ExposureChecker() {
     }
 
     setInvalid(false);
-    setScanned(entry);
     setPhase("loading");
     setResult(null);
 
@@ -114,8 +107,6 @@ export function ExposureChecker() {
     }
   }
 
-  const risk = result ? deriveRisk(result) : null;
-
   return (
     <section ref={sectionRef} id="check" className="py-8 scroll-mt-8">
       <h3 className="text-sm uppercase text-content mb-6">
@@ -123,7 +114,7 @@ export function ExposureChecker() {
       </h3>
 
       <p className="text-content-40 text-sm mb-6">
-        Enter any Ethereum address. Reads public blockchain data only.
+        Enter any Ethereum address or ENS name. Reads public blockchain data only.
       </p>
 
       {/* Stacks below 480px (input full width, button full width beneath) and
@@ -144,11 +135,11 @@ export function ExposureChecker() {
             }}
             onFocus={() => setHasFocus(true)}
             onBlur={() => setHasFocus(false)}
-            aria-label="Ethereum address"
+            aria-label="Ethereum address or ENS name"
             aria-invalid={invalid || undefined}
             spellCheck={false}
             autoComplete="off"
-            placeholder="0x… address"
+            placeholder="0x… or name.eth"
             // size=1 kills the input's ~20ch intrinsic width, which is what was
             // pushing the section past 320px; w-full gives the width back.
             size={1}
@@ -179,7 +170,7 @@ export function ExposureChecker() {
 
       {invalid && (
         <p className="mt-2 text-xs uppercase text-flare">
-          Invalid address format
+          Enter an address or ENS name
         </p>
       )}
 
@@ -194,7 +185,7 @@ export function ExposureChecker() {
           </p>
         )}
 
-        {phase === "done" && result && risk && (
+        {phase === "done" && result && (
           <>
             <div className="mt-8 border-y border-border py-5">
               {/* What was scanned, kept quiet: it identifies the reading
@@ -204,14 +195,14 @@ export function ExposureChecker() {
                   a rendering fault. */}
               <p className="text-xs text-content-40 tabular-nums">
                 <span className="uppercase">Address</span>{" "}
-                {truncateAddress(scanned)}
+                {result.displayLabel}
               </p>
 
               <p className="mt-5 text-xs uppercase text-content-40">Risk:</p>
               <p
-                className={`text-4xl md:text-5xl leading-none ${RISK_TONE[risk]}`}
+                className={`text-4xl md:text-5xl leading-none ${RISK_TONE[result.risk]}`}
               >
-                {risk}
+                {result.risk}
               </p>
 
               <p className="mt-4 text-base text-content-60">
