@@ -41,6 +41,34 @@
 }
 
 /*
+ * Simulated text caret for Exhibit D's arrival state, used on devices where we
+ * deliberately do not take real focus (taking it would raise the on-screen
+ * keyboard unasked). Steps rather than a fade, so it reads as a terminal
+ * cursor rather than a pulse. Reduced motion holds it steady instead.
+ */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret-blink {
+  animation: caret-blink 1.06s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret-blink {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/*
  * Cryptographic-decay texture: a whisper-quiet pixel/dither mosaic sitting
  * behind the hero monument number only. CSS-only (no JS, canvas, or images):
  * a flare checkerboard at low opacity, radial-masked so it fades to nothing

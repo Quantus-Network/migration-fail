@@ -147,7 +147,9 @@ export function ReadinessTable() {
                       {chain.status}
                     </td>
                     <td className="py-2.5 px-1.5 sm:px-3 text-xs whitespace-nowrap">
-                      <span className="text-content">{chain.scheme}</span>
+                      <GlossaryTerm term={chain.scheme}>
+                        {chain.scheme}
+                      </GlossaryTerm>
                       <span className="text-content-40"> &middot; </span>
                       <GlossaryTerm term={`NIST level ${chain.nistLevel}`}>
                         L{chain.nistLevel}
@@ -210,7 +212,7 @@ export function ReadinessTable() {
                 }
               >
                 <td className="py-2.5 px-2 sm:px-3 text-content whitespace-nowrap">
-                  {spec.scheme}
+                  <GlossaryTerm term={spec.scheme}>{spec.scheme}</GlossaryTerm>
                 </td>
                 <td
                   className={`py-2.5 px-1.5 sm:px-3 text-xs uppercase whitespace-nowrap ${
