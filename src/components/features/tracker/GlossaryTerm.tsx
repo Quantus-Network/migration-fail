@@ -130,8 +130,15 @@ export function GlossaryTerm({ term, href, children }: Props) {
   // `text-inherit` is load-bearing and must not be dropped: global.css sets a
   // base `a { color: #ff6b35 }`, so a linked term with no colour class falls
   // back to flare and silently reads as navigation.
-  const termClass =
-    "text-inherit border-b border-dotted border-content-40 hover:border-flare transition-colors";
+  //
+  // The rule is drawn only when interacting actually does something: a tooltip
+  // (fine pointer) or navigation (href). On a touch device an unlinked term
+  // has neither, so it renders as plain text rather than advertising an
+  // affordance that cannot fire.
+  const showAffordance = Boolean(interactive) || Boolean(href);
+  const termClass = showAffordance
+    ? "text-inherit border-b border-dotted border-content-40 hover:border-flare transition-colors"
+    : "text-inherit";
 
   const handlers = interactive
     ? { onMouseEnter: show, onMouseLeave: hide, onFocus: show, onBlur: hide }

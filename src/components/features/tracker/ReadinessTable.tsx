@@ -8,8 +8,9 @@ import {
   type DimensionKey,
   type ReadinessChain,
 } from "@/data/readiness-data";
-import { ExpandingRow } from "./HoverAnnotation";
+import { ExpandingRow, useHoverNone, usePointerFine } from "./HoverAnnotation";
 import { GlossaryTerm } from "./GlossaryTerm";
+import { getDefinition } from "@/constants/glossary";
 
 const DIMENSION_ORDER: DimensionKey[] = [
   "sigs",
@@ -52,6 +53,11 @@ function DimensionRow({
 export function ReadinessTable() {
   const uid = useId();
   const [openId, setOpenId] = useState<string | null>(null);
+  // Same hybrid guard used elsewhere: a device reporting both a mouse and a
+  // touchscreen keeps the desktop behaviour, so it never gets the definition
+  // line *and* the tooltips.
+  const fine = usePointerFine();
+  const touch = useHoverNone() && !fine;
 
   return (
     <section className="py-8">
@@ -182,6 +188,18 @@ export function ReadinessTable() {
                     colSpan={4}
                     divider={index !== READINESS_CHAINS.length - 1}
                   >
+                    {/* Touch only: the tooltips that carry these definitions
+                        on desktop cannot fire here, so the strip states them
+                        outright before the dimensions. */}
+                    {touch && (
+                      <p className="text-xs text-content-60 pb-1">
+                        {chain.scheme}
+                        {getDefinition(chain.scheme) && (
+                          <> &middot; {getDefinition(chain.scheme)}</>
+                        )}{" "}
+                        &middot; NIST security level {chain.nistLevel}
+                      </p>
+                    )}
                     {DIMENSION_ORDER.map((dimension) => (
                       <DimensionRow
                         key={dimension}
@@ -224,6 +242,13 @@ export function ReadinessTable() {
               {spec.publicKeyBytes.toLocaleString()} B &middot; Signature{" "}
               {spec.signatureBytes.toLocaleString()} B
             </div>
+            {/* The definition in full, since the card is the mobile view and
+                its tooltip cannot be reached by tapping. */}
+            {getDefinition(spec.scheme) && (
+              <div className="mt-1 text-xs text-content-40">
+                {getDefinition(spec.scheme)}
+              </div>
+            )}
           </div>
         ))}
       </div>
