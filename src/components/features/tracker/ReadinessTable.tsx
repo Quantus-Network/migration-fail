@@ -218,6 +218,10 @@ export function ReadinessTable() {
       <h4 className="text-sm uppercase text-content-60 mt-12 mb-4">
         Signature scheme specifications
       </h4>
+      <p className="text-content-40 text-xs mb-4">
+        Signature size affects transaction fees and throughput. Quantum
+        resistance has a cost measured in bytes.
+      </p>
       {/* Below sm the five columns become one card per scheme. Compression
           could not save this table: Public Key and Signature are both headers
           longer than their values, so the columns cannot go narrow enough. */}
@@ -267,10 +271,10 @@ export function ReadinessTable() {
                 Level
               </th>
               <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm text-right">
-                Public Key
+                <GlossaryTerm term="Public Key">Public Key</GlossaryTerm>
               </th>
               <th className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 font-normal text-content text-sm text-right">
-                Signature
+                <GlossaryTerm term="Signature">Signature</GlossaryTerm>
               </th>
             </tr>
           </thead>
@@ -300,20 +304,16 @@ export function ReadinessTable() {
                   </GlossaryTerm>
                 </td>
                 <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
-                  {spec.publicKeyBytes.toLocaleString()}
+                  {spec.publicKeyBytes.toLocaleString()} B
                 </td>
                 <td className="py-3 px-1.5 min-[360px]:px-2 sm:py-2.5 sm:px-3 tabular-nums text-content-60 text-right whitespace-nowrap">
-                  {spec.signatureBytes.toLocaleString()}
+                  {spec.signatureBytes.toLocaleString()} B
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="text-content-40 text-xs mt-3">
-        Signature size affects transaction fees and throughput. Quantum
-        resistance has a cost measured in bytes.
-      </p>
     </section>
   );
 }
