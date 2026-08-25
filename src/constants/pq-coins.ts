@@ -106,6 +106,19 @@ export const PQ_COINS: PQCoin[] = [
     signature: "ML-DSA-87 (Dilithium)",
     explainer: "Lattice-based signatures. Designed to resist quantum computers.",
   },
+  {
+    id: "near",
+    name: "NEAR Protocol",
+    symbol: "NEAR",
+    website: "https://near.org/",
+    description: "High-performance sharded layer 1 blockchain",
+    // nearcore PostQuantumSignatures (protocol v85 / upgrade 2.13, July 2026):
+    // FIPS 204 ML-DSA-65 is accepted for transactions and access keys.
+    // Existing ed25519 and secp256k1 are not deprecated; validator keys remain
+    // ed25519. See docs/architecture/how/post_quantum_signatures.md.
+    signature: "ML-DSA-65 (Dilithium)",
+    explainer: "Lattice-based signatures. Designed to resist quantum computers.",
+  },
 ];
 
 // Helper to get comma-separated IDs for API calls
