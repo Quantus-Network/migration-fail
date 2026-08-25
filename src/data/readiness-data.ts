@@ -365,6 +365,46 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     nistLevel: 5,
     dimensions: pqSigsOnly("Dilithium-5"),
   },
+  // Not in the February 2026 Quantum Canary table. nearcore upgrade 2.13
+  // (protocol v85, July 2026) accepted FIPS 204 ML-DSA-65 — Dilithium-3 —
+  // for transactions and access keys. Existing ed25519 / secp256k1 stay;
+  // validator keys remain ed25519. See pq-coins.ts and
+  // nearcore docs/architecture/how/post_quantum_signatures.md.
+  {
+    name: "NEAR Protocol",
+    ticker: "NEAR",
+    grade: "C",
+    status: "Mainnet",
+    scheme: "Dilithium-3",
+    nistLevel: 3,
+    dimensions: {
+      sigs: {
+        state: "pass",
+        evidence:
+          "Accounts can sign with Dilithium-3, a post-quantum scheme.",
+      },
+      p2p: {
+        state: "fail",
+        evidence: "No post-quantum protection documented for peer connections.",
+        uncertain: true,
+      },
+      consensus: {
+        state: "fail",
+        evidence:
+          "Validator keys remain Ed25519, which a quantum computer could break.",
+      },
+      zk: {
+        state: "fail",
+        evidence: "No post-quantum zero-knowledge proof system documented.",
+        uncertain: true,
+      },
+      privacy: {
+        state: "fail",
+        evidence: "No post-quantum privacy features documented.",
+        uncertain: true,
+      },
+    },
+  },
   {
     name: "Bitcoin",
     ticker: "BTC",
