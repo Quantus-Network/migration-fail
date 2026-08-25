@@ -47,6 +47,32 @@ export const DIMENSION_LABELS: Record<DimensionKey, string> = {
   privacy: "Privacy features",
 };
 
+/** Exhibit C order, reused as the five marks on each Exhibit A icon. */
+export const DIMENSION_ORDER: DimensionKey[] = [
+  "sigs",
+  "p2p",
+  "consensus",
+  "zk",
+  "privacy",
+];
+
+/** Short names for the Exhibit A overlay legend and hover line. */
+export const DIMENSION_SHORT: Record<DimensionKey, string> = {
+  sigs: "signatures",
+  p2p: "connections",
+  consensus: "consensus",
+  zk: "proofs",
+  privacy: "privacy",
+};
+
+export type AspectTone = "pass" | "fail" | "uncertain";
+
+export function aspectTone(dimension: Dimension): AspectTone {
+  if (dimension.state === "pass") return "pass";
+  if (dimension.uncertain) return "uncertain";
+  return "fail";
+}
+
 /** Every dimension classically secured — the shape of a D/F row. */
 function allClassical(scheme: string): Record<DimensionKey, Dimension> {
   return {
@@ -261,7 +287,7 @@ export const READINESS_CHAINS: ReadinessChain[] = [
   {
     name: "Starknet",
     ticker: "STRK",
-    grade: "C",
+    grade: "B",
     status: "Mainnet",
     scheme: "Falcon-512",
     nistLevel: 1,
@@ -291,15 +317,6 @@ export const READINESS_CHAINS: ReadinessChain[] = [
         evidence: "Privacy features use post-quantum cryptography.",
       },
     },
-  },
-  {
-    name: "Nexus",
-    ticker: "NXS",
-    grade: "C",
-    status: "Mainnet",
-    scheme: "Falcon-512",
-    nistLevel: 1,
-    dimensions: pqSigsOnly("Falcon-512"),
   },
   {
     name: "Zcash",
@@ -357,16 +374,37 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     status: "Mainnet",
     scheme: "WOTS+",
     nistLevel: 5,
-    dimensions: pqSigsOnly("WOTS+"),
+    dimensions: {
+      ...pqSigsOnly("WOTS+"),
+      consensus: {
+        state: "pass",
+        evidence: "Block validation uses post-quantum primitives throughout.",
+      },
+    },
   },
   {
-    name: "IOTA",
-    ticker: "IOTA",
+    name: "Algorand",
+    ticker: "ALGO",
     grade: "C",
     status: "Mainnet",
-    scheme: "Dilithium-5",
+    scheme: "Falcon-1024",
     nistLevel: 5,
-    dimensions: allClassical("Ed25519"),
+    dimensions: {
+      ...pqSigsOnly("Falcon-1024"),
+      consensus: {
+        state: "pass",
+        evidence: "Block validation uses post-quantum primitives throughout.",
+      },
+    },
+  },
+  {
+    name: "Nexus",
+    ticker: "NXS",
+    grade: "D",
+    status: "Mainnet",
+    scheme: "Falcon-512",
+    nistLevel: 1,
+    dimensions: pqSigsOnly("Falcon-512"),
   },
   // Not in the February 2026 Quantum Canary table. nearcore upgrade 2.13
   // (protocol v85, July 2026) accepted FIPS 204 ML-DSA-65 — Dilithium-3 —
@@ -376,7 +414,7 @@ export const READINESS_CHAINS: ReadinessChain[] = [
   {
     name: "NEAR Protocol",
     ticker: "NEAR",
-    grade: "C",
+    grade: "D",
     status: "Mainnet",
     scheme: "Dilithium-3",
     nistLevel: 3,
@@ -423,21 +461,7 @@ export const READINESS_CHAINS: ReadinessChain[] = [
       },
     },
   },
-  {
-    name: "Algorand",
-    ticker: "ALGO",
-    grade: "D",
-    status: "Mainnet",
-    scheme: "Falcon-1024",
-    nistLevel: 5,
-    dimensions: {
-      ...pqSigsOnly("Falcon-1024"),
-      consensus: {
-        state: "pass",
-        evidence: "Block validation uses post-quantum primitives throughout.",
-      },
-    },
-  },
+
   {
     name: "Hedera",
     ticker: "HBAR",
@@ -445,7 +469,13 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     status: "Mainnet",
     scheme: "Ed25519",
     nistLevel: 1,
-    dimensions: allClassical("Ed25519"),
+    dimensions: {
+      ...allClassical("Ed25519"),
+      consensus: {
+        state: "pass",
+        evidence: "The consensus mechanism uses post-quantum primitives.",
+      },
+    },
   },
   {
     name: "Monero",
@@ -485,7 +515,44 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     nistLevel: 1,
     dimensions: allClassical("Ed25519"),
   },
+  {
+    name: "IOTA",
+    ticker: "IOTA",
+    grade: "F",
+    status: "Mainnet",
+    scheme: "Ed25519",
+    nistLevel: 1,
+    dimensions: allClassical("Ed25519"),
+  },
 ];
+
+const READINESS_BY_TICKER = new Map(
+  READINESS_CHAINS.map((chain) => [chain.ticker, chain]),
+);
+
+export function readinessByTicker(ticker: string): ReadinessChain | undefined {
+  return READINESS_BY_TICKER.get(ticker.toUpperCase());
+}
+
+export interface ReadinessSummary {
+  passed: number;
+  total: number;
+  passedKeys: DimensionKey[];
+  tones: AspectTone[];
+}
+
+export function readinessSummary(chain: ReadinessChain): ReadinessSummary {
+  const tones = DIMENSION_ORDER.map((key) => aspectTone(chain.dimensions[key]));
+  const passedKeys = DIMENSION_ORDER.filter(
+    (key) => chain.dimensions[key].state === "pass",
+  );
+  return {
+    passed: passedKeys.length,
+    total: DIMENSION_ORDER.length,
+    passedKeys,
+    tones,
+  };
+}
 
 export interface SchemeSpec {
   scheme: string;

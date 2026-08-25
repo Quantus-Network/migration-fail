@@ -1,6 +1,7 @@
 import { Fragment, useId, useState } from "react";
 import {
   DIMENSION_LABELS,
+  DIMENSION_ORDER,
   READINESS_CHAINS,
   READINESS_SOURCE_URL,
   SCHEME_SPECS,
@@ -11,14 +12,6 @@ import {
 import { ExpandingRow, useHoverNone, usePointerFine } from "./HoverAnnotation";
 import { GlossaryTerm } from "./GlossaryTerm";
 import { getDefinition } from "@/constants/glossary";
-
-const DIMENSION_ORDER: DimensionKey[] = [
-  "sigs",
-  "p2p",
-  "consensus",
-  "zk",
-  "privacy",
-];
 
 function DimensionRow({
   chain,

@@ -9,6 +9,11 @@ import {
   useHoverNone,
   usePointerFine,
 } from "./HoverAnnotation";
+import {
+  ReadinessDetail,
+  ReadinessGrade,
+  ReadinessOverlay,
+} from "./ReadinessMark";
 
 interface Props {
   coins: CoinWithPercentage[];
@@ -119,135 +124,145 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
                 const stripId = `${uid}-${coin.id}`;
                 return (
                   <Fragment key={coin.id}>
-                  <tr
-                    className={
-                      expandable
-                        ? `cursor-pointer transition-colors ${
-                            open ? "bg-content-4" : ""
-                          }`
-                        : "border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
-                    }
-                    aria-expanded={expandable ? open : undefined}
-                    aria-controls={expandable ? stripId : undefined}
-                    onClick={
-                      expandable
-                        ? () => setOpenId((prev) => (prev === coin.id ? null : coin.id))
-                        : undefined
-                    }
-                    onMouseEnter={
-                      fine
-                        ? (e) => setHover({ x: e.clientX, y: e.clientY, coin })
-                        : undefined
-                    }
-                    onMouseMove={
-                      fine
-                        ? (e) => setHover({ x: e.clientX, y: e.clientY, coin })
-                        : undefined
-                    }
-                    onMouseLeave={fine ? () => setHover(null) : undefined}
-                  >
-                    <td className="py-2.5 px-2 sm:px-3">
-                      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                        {coin.image ? (
-                          <img
-                            src={coin.image}
-                            alt={coin.name}
-                            className="w-5 h-5 rounded-full shrink-0"
-                          />
-                        ) : (
-                          <div className="w-5 h-5 bg-content-20 shrink-0" />
-                        )}
-                        {/* On touch the symbol is inert text so the first tap
+                    <tr
+                      className={
+                        expandable
+                          ? `cursor-pointer transition-colors ${
+                              open ? "bg-content-4" : ""
+                            }`
+                          : "border-b border-border last:border-b-0 hover:bg-content-4 transition-colors"
+                      }
+                      aria-expanded={expandable ? open : undefined}
+                      aria-controls={expandable ? stripId : undefined}
+                      onClick={
+                        expandable
+                          ? () =>
+                              setOpenId((prev) =>
+                                prev === coin.id ? null : coin.id,
+                              )
+                          : undefined
+                      }
+                      onMouseEnter={
+                        fine
+                          ? (e) =>
+                              setHover({ x: e.clientX, y: e.clientY, coin })
+                          : undefined
+                      }
+                      onMouseMove={
+                        fine
+                          ? (e) =>
+                              setHover({ x: e.clientX, y: e.clientY, coin })
+                          : undefined
+                      }
+                      onMouseLeave={fine ? () => setHover(null) : undefined}
+                    >
+                      <td className="py-2.5 px-2 sm:px-3">
+                        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                          {coin.image ? (
+                            <img
+                              src={coin.image}
+                              alt={coin.name}
+                              className="w-5 h-5 rounded-full shrink-0"
+                            />
+                          ) : (
+                            <div className="w-5 h-5 bg-content-20 shrink-0" />
+                          )}
+                          {/* On touch the symbol is inert text so the first tap
                             expands the row instead of navigating; the link
                             moves into the strip below. */}
-                        {expandable ? (
-                          <span className="text-content font-medium truncate max-w-[7ch] sm:max-w-none">
-                            {coin.symbol.toUpperCase()}
+                          {expandable ? (
+                            <span className="text-content font-medium truncate max-w-[7ch] sm:max-w-none">
+                              {coin.symbol.toUpperCase()}
+                            </span>
+                          ) : (
+                            <a
+                              href={config?.website || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              // Register 2 — navigation. Solid underline so the
+                              // ticker reads as a link at rest rather than only
+                              // colouring on hover.
+                              className="text-content underline decoration-1 underline-offset-2 hover:text-flare transition-colors font-medium truncate max-w-[7ch] sm:max-w-none"
+                            >
+                              {coin.symbol.toUpperCase()}
+                            </a>
+                          )}
+                          <span className="text-content-40 text-xs truncate hidden sm:inline">
+                            {coin.name}
                           </span>
-                        ) : (
-                          <a
-                            href={config?.website || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            // Register 2 — navigation. Solid underline so the
-                            // ticker reads as a link at rest rather than only
-                            // colouring on hover.
-                            className="text-content underline decoration-1 underline-offset-2 hover:text-flare transition-colors font-medium truncate max-w-[7ch] sm:max-w-none"
-                          >
-                            {coin.symbol.toUpperCase()}
-                          </a>
-                        )}
-                        <span className="text-content-40 text-xs truncate hidden sm:inline">
-                          {coin.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td
-                      className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
-                        coin.market_cap === null
-                          ? "text-xs text-content-40"
-                          : "text-content"
-                      }`}
-                    >
-                      {coin.market_cap === null
-                        ? "TESTNET"
-                        : formatMarketCap(coin.market_cap)}
-                    </td>
-                    <td
-                      className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
-                        coin.market_cap === null ? "text-content-40" : "text-sage"
-                      }`}
-                    >
-                      {coin.market_cap === null
-                        ? "·"
-                        : `${formatPercentage(coin.percentageOfTotal)}%`}
-                    </td>
-                  </tr>
-                  {expandable && (
-                    <ExpandingRow
-                      id={stripId}
-                      open={open}
-                      colSpan={3}
-                      divider={index !== coins.length - 1}
-                    >
-                      <div className="text-content">
+                          <ReadinessGrade ticker={coin.symbol} />
+                          <ReadinessOverlay ticker={coin.symbol} />
+                        </div>
+                      </td>
+                      <td
+                        className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
+                          coin.market_cap === null
+                            ? "text-xs text-content-40"
+                            : "text-content"
+                        }`}
+                      >
                         {coin.market_cap === null
                           ? "TESTNET"
-                          : formatMarketCapFull(coin.market_cap)}
-                      </div>
-                      <div className="text-content-60">
+                          : formatMarketCap(coin.market_cap)}
+                      </td>
+                      <td
+                        className={`py-2.5 px-1.5 sm:px-3 tabular-nums text-right whitespace-nowrap ${
+                          coin.market_cap === null
+                            ? "text-content-40"
+                            : "text-sage"
+                        }`}
+                      >
                         {coin.market_cap === null
                           ? "·"
-                          : `${coin.percentageOfTotal.toFixed(4)}% of total`}
-                      </div>
-                      <div className="text-sage">
-                        SIGNATURE: {config?.signature ?? "PQC (unverified)"}
-                      </div>
-                      {config?.explainer && (
-                        <div className="text-xs text-content-40 normal-case">
-                          {config.explainer}
+                          : `${formatPercentage(coin.percentageOfTotal)}%`}
+                      </td>
+                    </tr>
+                    {expandable && (
+                      <ExpandingRow
+                        id={stripId}
+                        open={open}
+                        colSpan={3}
+                        divider={index !== coins.length - 1}
+                      >
+                        <div className="text-content">
+                          {coin.market_cap === null
+                            ? "TESTNET"
+                            : formatMarketCapFull(coin.market_cap)}
                         </div>
-                      )}
-                      {config?.description && (
-                        <div className="text-content-40">
-                          {config.description}
+                        <div className="text-content-60">
+                          {coin.market_cap === null
+                            ? "·"
+                            : `${coin.percentageOfTotal.toFixed(4)}% of total`}
                         </div>
-                      )}
-                      {config?.website && (
-                        <a
-                          href={config.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          // Register 2 — navigation. The ↗ glyph is the rest
-                          // affordance here, matching the Learn More pattern,
-                          // so the underline is reserved for hover.
-                          className="inline-block pt-1.5 text-flare hover:underline decoration-1 underline-offset-2"
-                        >
-                          {config.name} &#8599;
-                        </a>
-                      )}
-                    </ExpandingRow>
-                  )}
+                        <div className="text-sage">
+                          SIGNATURE: {config?.signature ?? "PQC (unverified)"}
+                        </div>
+                        <ReadinessDetail ticker={coin.symbol} />
+                        {config?.explainer && (
+                          <div className="text-xs text-content-40 normal-case">
+                            {config.explainer}
+                          </div>
+                        )}
+                        {config?.description && (
+                          <div className="text-content-40">
+                            {config.description}
+                          </div>
+                        )}
+                        {config?.website && (
+                          <a
+                            href={config.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            // Register 2 — navigation. The ↗ glyph is the rest
+                            // affordance here, matching the Learn More pattern,
+                            // so the underline is reserved for hover.
+                            className="inline-block pt-1.5 text-flare hover:underline decoration-1 underline-offset-2"
+                          >
+                            {config.name} &#8599;
+                          </a>
+                        )}
+                      </ExpandingRow>
+                    )}
                   </Fragment>
                 );
               })
@@ -255,10 +270,26 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
           </tbody>
         </table>
       </div>
-      <p className="text-content-40 text-xs mt-3 flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 bg-sage" />
-        Uses quantum-resistant cryptographic algorithms
-      </p>
+      <div className="text-content-40 text-xs mt-3 space-y-1.5">
+        <p>
+          Five marks: signatures, connections, consensus, proofs, privacy. The
+          letter is the Exhibit C grade. Listing is not full coverage.
+        </p>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-sage" />
+            protected
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-flare" />
+            not
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-content-40" />
+            unverified
+          </span>
+        </p>
+      </div>
 
       {fine && hover && (
         <AnnotationCard x={hover.x} y={hover.y}>
@@ -276,8 +307,11 @@ export function CoinTable({ coins, pqCoinsConfig, loading }: Props) {
             SIGNATURE:{" "}
             {configMap.get(hover.coin.id)?.signature ?? "PQC (unverified)"}
           </div>
+          <ReadinessDetail ticker={hover.coin.symbol} />
           {configMap.get(hover.coin.id)?.explainer && (
-            <div className={`text-xs text-content-40 normal-case ${CARD_TEXT_WRAP}`}>
+            <div
+              className={`text-xs text-content-40 normal-case ${CARD_TEXT_WRAP}`}
+            >
               {configMap.get(hover.coin.id)?.explainer}
             </div>
           )}

@@ -54,9 +54,9 @@ interface AnnotationCardProps {
  */
 /** Rough card footprint, used only to keep the card on screen. Kept in sync
  *  with the widest wrapped line (see CARD_TEXT_WRAP) and the tallest card,
- *  which is Exhibit A's: figure, share, signature, explainer over two lines. */
+ *  which is Exhibit A's: figure, share, signature, explainer, readiness, coverage. */
 const CARD_W = 260;
-const CARD_H = 120;
+const CARD_H = 168;
 
 export function AnnotationCard({ x, y, children }: AnnotationCardProps) {
   const vw = typeof window !== "undefined" ? window.innerWidth : 0;
