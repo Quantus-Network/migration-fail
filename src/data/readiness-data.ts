@@ -406,11 +406,6 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     nistLevel: 1,
     dimensions: pqSigsOnly("Falcon-512"),
   },
-  // Not in the February 2026 Quantum Canary table. nearcore upgrade 2.13
-  // (protocol v85, July 2026) accepted FIPS 204 ML-DSA-65 — Dilithium-3 —
-  // for transactions and access keys. Existing ed25519 / secp256k1 stay;
-  // validator keys remain ed25519. See pq-coins.ts and
-  // nearcore docs/architecture/how/post_quantum_signatures.md.
   {
     name: "NEAR Protocol",
     ticker: "NEAR",

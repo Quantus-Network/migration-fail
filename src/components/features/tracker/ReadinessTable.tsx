@@ -62,7 +62,7 @@ export function ReadinessTable() {
         <p>
           An independent technical assessment grading networks solely on current
           adoption of standardized post-quantum cryptography. Grades reflect
-          implementation status as of February 2026, not overall project
+          implementation status as of August 2026, not overall project
           quality, security in non-quantum contexts, or future potential. A
           lower grade indicates reliance on classical signatures, which is the
           common industry position today. Not investment advice. Verify claims
@@ -75,7 +75,7 @@ export function ReadinessTable() {
             rel="noopener noreferrer"
             className="text-flare hover:underline decoration-1 underline-offset-2 transition-colors uppercase text-xs"
           >
-            Source: Quantum Canary technical assessment &middot; February 2026
+            Source: Quantum Canary technical assessment &middot; August 2026
           </a>
         </p>
       </div>
