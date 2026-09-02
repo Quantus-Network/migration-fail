@@ -30,19 +30,19 @@ export const PQ_COINS: PQCoin[] = [
     signature: "Falcon (state proofs)",
     explainer: "Lattice-based signatures. Designed to resist quantum computers.",
   },
-  {
-    id: "iota",
-    name: "IOTA",
-    symbol: "IOTA",
-    website: "https://www.iota.org/",
-    description: "Post-quantum signatures in development",
-    // Verified against the IOTA TIP for the Ed25519 signature scheme: Chrysalis
-    // replaced the old hash-based W-OTS entirely with Ed25519, which is NOT
-    // quantum-resistant. Kept in this table pending an editorial call, since
-    // removing a coin changes the headline percentage.
-    signature: "Ed25519",
-    explainer: "Elliptic-curve signatures. Breakable by a future quantum computer.",
-  },
+  // {
+  //   id: "iota",
+  //   name: "IOTA",
+  //   symbol: "IOTA",
+  //   website: "https://www.iota.org/",
+  //   description: "Post-quantum signatures in development",
+  //   // Verified against the IOTA TIP for the Ed25519 signature scheme: Chrysalis
+  //   // replaced the old hash-based W-OTS entirely with Ed25519, which is NOT
+  //   // quantum-resistant. Kept in this table pending an editorial call, since
+  //   // removing a coin changes the headline percentage.
+  //   signature: "Ed25519",
+  //   explainer: "Elliptic-curve signatures. Breakable by a future quantum computer.",
+  // },
   {
     id: "quantum-resistant-ledger",
     name: "Quantum Resistant Ledger",

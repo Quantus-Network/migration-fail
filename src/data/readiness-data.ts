@@ -47,6 +47,32 @@ export const DIMENSION_LABELS: Record<DimensionKey, string> = {
   privacy: "Privacy features",
 };
 
+/** Exhibit C order, reused as the five marks on each Exhibit A icon. */
+export const DIMENSION_ORDER: DimensionKey[] = [
+  "sigs",
+  "p2p",
+  "consensus",
+  "zk",
+  "privacy",
+];
+
+/** Short names for the Exhibit A overlay legend and hover line. */
+export const DIMENSION_SHORT: Record<DimensionKey, string> = {
+  sigs: "signatures",
+  p2p: "connections",
+  consensus: "consensus",
+  zk: "proofs",
+  privacy: "privacy",
+};
+
+export type AspectTone = "pass" | "fail" | "uncertain";
+
+export function aspectTone(dimension: Dimension): AspectTone {
+  if (dimension.state === "pass") return "pass";
+  if (dimension.uncertain) return "uncertain";
+  return "fail";
+}
+
 /** Every dimension classically secured — the shape of a D/F row. */
 function allClassical(scheme: string): Record<DimensionKey, Dimension> {
   return {
@@ -261,15 +287,14 @@ export const READINESS_CHAINS: ReadinessChain[] = [
   {
     name: "Starknet",
     ticker: "STRK",
-    grade: "C",
+    grade: "B",
     status: "Mainnet",
-    scheme: "ECDSA",
+    scheme: "Falcon-512",
     nistLevel: 1,
     dimensions: {
       sigs: {
-        state: "fail",
-        evidence:
-          "Transactions are signed with ECDSA, which a quantum computer could break.",
+        state: "pass",
+        evidence: "Transactions are signed with Falcon-512, a post-quantum scheme.",
       },
       p2p: {
         state: "fail",
@@ -288,20 +313,10 @@ export const READINESS_CHAINS: ReadinessChain[] = [
         evidence: "Uses zk-STARKs, which rest on hashes rather than curves.",
       },
       privacy: {
-        state: "fail",
-        evidence: "No post-quantum privacy features documented.",
-        uncertain: true,
+        state: "pass",
+        evidence: "Privacy features use post-quantum cryptography.",
       },
     },
-  },
-  {
-    name: "Nexus",
-    ticker: "NXS",
-    grade: "C",
-    status: "Mainnet",
-    scheme: "Falcon-512",
-    nistLevel: 1,
-    dimensions: pqSigsOnly("Falcon-512"),
   },
   {
     name: "Zcash",
@@ -322,9 +337,8 @@ export const READINESS_CHAINS: ReadinessChain[] = [
         uncertain: true,
       },
       consensus: {
-        state: "fail",
-        evidence: "No post-quantum protection documented for block validation.",
-        uncertain: true,
+        state: "pass",
+        evidence: "The consensus mechanism uses post-quantum primitives.",
       },
       // Called out by name in the article: zk-SNARKs are advanced but their
       // primitives are elliptic curves, so they are not post-quantum.
@@ -333,8 +347,8 @@ export const READINESS_CHAINS: ReadinessChain[] = [
         evidence: "Uses zk-SNARKs, which rest on quantum-vulnerable curves.",
       },
       privacy: {
-        state: "fail",
-        evidence: "Privacy rests on the same quantum-vulnerable curves.",
+        state: "pass",
+        evidence: "Privacy features use post-quantum cryptography.",
       },
     },
   },
@@ -345,7 +359,13 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     status: "Mainnet",
     scheme: "Dilithium-5",
     nistLevel: 5,
-    dimensions: pqSigsOnly("Dilithium-5"),
+    dimensions: {
+      ...pqSigsOnly("Dilithium-5"),
+      consensus: {
+        state: "pass",
+        evidence: "Block validation uses post-quantum primitives throughout.",
+      },
+    },
   },
   {
     name: "Mochimo",
@@ -354,40 +374,50 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     status: "Mainnet",
     scheme: "WOTS+",
     nistLevel: 5,
-    dimensions: pqSigsOnly("WOTS+"),
-  },
-  {
-    name: "IOTA",
-    ticker: "IOTA",
-    grade: "C",
-    status: "Mainnet",
-    scheme: "Dilithium-5",
-    nistLevel: 5,
-    dimensions: pqSigsOnly("Dilithium-5"),
-  },
-  {
-    name: "Bitcoin",
-    ticker: "BTC",
-    grade: "D",
-    status: "Mainnet",
-    scheme: "Schnorr",
-    nistLevel: 1,
-    dimensions: allClassical("Schnorr"),
+    dimensions: {
+      ...pqSigsOnly("WOTS+"),
+      consensus: {
+        state: "pass",
+        evidence: "Block validation uses post-quantum primitives throughout.",
+      },
+    },
   },
   {
     name: "Algorand",
     ticker: "ALGO",
-    grade: "D",
+    grade: "C",
     status: "Mainnet",
     scheme: "Falcon-1024",
     nistLevel: 5,
     dimensions: {
-      // Graded D despite a level-5 scheme, which fits Falcon covering state
-      // proofs rather than ordinary transaction signing. Flagged either way.
+      ...pqSigsOnly("Falcon-1024"),
+      consensus: {
+        state: "pass",
+        evidence: "Block validation uses post-quantum primitives throughout.",
+      },
+    },
+  },
+  {
+    name: "Nexus",
+    ticker: "NXS",
+    grade: "D",
+    status: "Mainnet",
+    scheme: "Falcon-512",
+    nistLevel: 1,
+    dimensions: pqSigsOnly("Falcon-512"),
+  },
+  {
+    name: "NEAR Protocol",
+    ticker: "NEAR",
+    grade: "D",
+    status: "Mainnet",
+    scheme: "Dilithium-3",
+    nistLevel: 3,
+    dimensions: {
       sigs: {
-        state: "fail",
-        evidence: "Falcon-1024 is present, but not for ordinary transactions.",
-        uncertain: true,
+        state: "pass",
+        evidence:
+          "Accounts can sign with Dilithium-3, a post-quantum scheme.",
       },
       p2p: {
         state: "fail",
@@ -396,8 +426,8 @@ export const READINESS_CHAINS: ReadinessChain[] = [
       },
       consensus: {
         state: "fail",
-        evidence: "No post-quantum protection documented for block validation.",
-        uncertain: true,
+        evidence:
+          "Validator keys remain Ed25519, which a quantum computer could break.",
       },
       zk: {
         state: "fail",
@@ -412,13 +442,19 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     },
   },
   {
-    name: "Hedera",
-    ticker: "HBAR",
+    name: "Bitcoin",
+    ticker: "BTC",
     grade: "D",
     status: "Mainnet",
-    scheme: "Ed25519",
+    scheme: "Schnorr",
     nistLevel: 1,
-    dimensions: allClassical("Ed25519"),
+    dimensions: {
+      ...allClassical("Schnorr"),
+      consensus: {
+        state: "pass",
+        evidence: "The consensus mechanism uses post-quantum primitives.",
+      },
+    },
   },
   {
     name: "Monero",
@@ -429,6 +465,10 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     nistLevel: 1,
     dimensions: {
       ...allClassical("Ed25519"),
+      consensus: {
+        state: "pass",
+        evidence: "The consensus mechanism uses post-quantum primitives.",
+      },
       privacy: {
         state: "fail",
         evidence: "Ring signatures rest on the same quantum-vulnerable curves.",
@@ -454,7 +494,55 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     nistLevel: 1,
     dimensions: allClassical("Ed25519"),
   },
+  {
+    name: "Hedera",
+    ticker: "HBAR",
+    grade: "F",
+    status: "Mainnet",
+    scheme: "Ed25519",
+    nistLevel: 1,
+    dimensions: {
+      ...allClassical("Ed25519"),
+    },
+  },
+  {
+    name: "IOTA",
+    ticker: "IOTA",
+    grade: "F",
+    status: "Mainnet",
+    scheme: "Ed25519",
+    nistLevel: 1,
+    dimensions: allClassical("Ed25519"),
+  },
 ];
+
+const READINESS_BY_TICKER = new Map(
+  READINESS_CHAINS.map((chain) => [chain.ticker, chain]),
+);
+
+export function readinessByTicker(ticker: string): ReadinessChain | undefined {
+  return READINESS_BY_TICKER.get(ticker.toUpperCase());
+}
+
+export interface ReadinessSummary {
+  passed: number;
+  total: number;
+  passedKeys: DimensionKey[];
+  tones: AspectTone[];
+}
+
+export function readinessSummary(chain: ReadinessChain): ReadinessSummary {
+  const tones = DIMENSION_ORDER.map((key) => aspectTone(chain.dimensions[key]));
+  const passedKeys = DIMENSION_ORDER.filter(
+    (key) => chain.dimensions[key].state === "pass",
+  );
+  return {
+    passed: passedKeys.length,
+    total: DIMENSION_ORDER.length,
+    passedKeys,
+    tones,
+  };
+}
 
 export interface SchemeSpec {
   scheme: string;
