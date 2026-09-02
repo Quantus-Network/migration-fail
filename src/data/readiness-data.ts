@@ -461,22 +461,6 @@ export const READINESS_CHAINS: ReadinessChain[] = [
       },
     },
   },
-
-  {
-    name: "Hedera",
-    ticker: "HBAR",
-    grade: "D",
-    status: "Mainnet",
-    scheme: "Ed25519",
-    nistLevel: 1,
-    dimensions: {
-      ...allClassical("Ed25519"),
-      consensus: {
-        state: "pass",
-        evidence: "The consensus mechanism uses post-quantum primitives.",
-      },
-    },
-  },
   {
     name: "Monero",
     ticker: "XMR",
@@ -514,6 +498,17 @@ export const READINESS_CHAINS: ReadinessChain[] = [
     scheme: "Ed25519",
     nistLevel: 1,
     dimensions: allClassical("Ed25519"),
+  },
+  {
+    name: "Hedera",
+    ticker: "HBAR",
+    grade: "F",
+    status: "Mainnet",
+    scheme: "Ed25519",
+    nistLevel: 1,
+    dimensions: {
+      ...allClassical("Ed25519"),
+    },
   },
   {
     name: "IOTA",
