@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
 
+import sitemap from "@astrojs/sitemap";
+
 /** @param {import('http').IncomingMessage} req */
 function isTrackerApiRequest(req) {
   const url = req.url ?? "";
@@ -17,7 +19,7 @@ function isOgApiRequest(req) {
 
 export default defineConfig({
   site: process.env.SITE_URL,
-  integrations: [tailwind(), react()],
+  integrations: [tailwind(), react(), sitemap()],
   vite: {
     plugins: [
       {

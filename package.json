@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "4.2.0",
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/tailwind": "6.0.2",
     "@fontsource/geist": "^5.2.8",
     "@fontsource/geist-mono": "^5.2.7",
