@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://migration.fail/sitemap-index.xml
