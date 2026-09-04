@@ -1,6 +1,6 @@
-name = "pqc-coins"
+name = "migration-fail"
 compatibility_date = "2024-09-23"
 pages_build_output_dir = "dist"
 
 [vars]
-SITE_URL="https://pqc-coins.pages.dev"
+SITE_URL="https://migration.fail"
